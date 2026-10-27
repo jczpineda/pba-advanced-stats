@@ -1,0 +1,14 @@
+# Scraped pages and everything derived from them. The statistics belong to the PBA;
+# this repo ships code, not data. Re-create with:  python run.py --fetch
+data/raw/
+data/derived/
+dist/
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.DS_Store
+.idea/
+.vscode/

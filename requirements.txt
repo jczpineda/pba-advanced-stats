@@ -1,0 +1,5 @@
+# The core pipeline (fetch -> parse -> validate -> metrics -> dashboard) uses only
+# the Python standard library. These are needed solely for the rejected-model
+# experiment in src/bpm_experiment.py.
+numpy>=1.24
+scikit-learn>=1.3

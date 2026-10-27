@@ -1,0 +1,1855 @@
+<title>PBA 50th Season Advanced Stats</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --ground:#f5f7f9; --surface:#ffffff; --surface-2:#eef1f5; --sunken:#e9edf2;
+  --ink:#0f141b; --ink-2:#4f5a68; --ink-3:#7d8794;
+  --hair:#dfe4ea; --hair-2:#cbd2db;
+  --tnt:#2a78d6; --mag:#eb6834;
+  --tnt-wash:rgba(42,120,214,.12); --mag-wash:rgba(235,104,52,.12);
+  --good:#1baf7a; --bad:#e34948;
+  --display:"Oswald",“Haettenschweiler”,"Arial Narrow",sans-serif;
+  --body:"Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0f1318; --surface:#161b22; --surface-2:#1c222b; --sunken:#11161c;
+    --ink:#e8edf3; --ink-2:#a3aeba; --ink-3:#737e8b;
+    --hair:#262d36; --hair-2:#333c47;
+    --tnt:#3987e5; --mag:#d95926;
+    --tnt-wash:rgba(57,135,229,.18); --mag-wash:rgba(217,89,38,.18);
+    --good:#199e70; --bad:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0f1318; --surface:#161b22; --surface-2:#1c222b; --sunken:#11161c;
+  --ink:#e8edf3; --ink-2:#a3aeba; --ink-3:#737e8b;
+  --hair:#262d36; --hair-2:#333c47;
+  --tnt:#3987e5; --mag:#d95926;
+  --tnt-wash:rgba(57,135,229,.18); --mag-wash:rgba(217,89,38,.18);
+  --good:#199e70; --bad:#e66767;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;
+  display:flex;flex-direction:column;gap:30px}
+h1,h2,h3{text-wrap:balance;margin:0}
+a{color:inherit}
+
+/* ---------- eyebrow / section heads ---------- */
+.eyebrow{font-family:var(--display);font-weight:500;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3)}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sec-head h2{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:.01em}
+.sec-head p{margin:0;color:var(--ink-2);font-size:13.5px;flex:1 1 240px;min-width:0}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;flex-direction:column;gap:6px}
+.mast .kicker{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mast .kicker span{white-space:nowrap}
+.dot-sep{width:3px;height:3px;border-radius:50%;background:var(--hair-2);flex:0 0 auto}
+
+/* ---------- scoreboard ---------- */
+.board{background:var(--surface);border:1px solid var(--hair);border-radius:4px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch}
+.bteam{padding:22px 20px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.bteam.r{align-items:flex-end;text-align:right}
+.btag{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.18em;
+  display:flex;align-items:center;gap:8px}
+.bteam.r .btag{flex-direction:row-reverse}
+.swatch{width:10px;height:10px;border-radius:2px;flex:0 0 auto}
+.bname{font-size:13.5px;color:var(--ink-2);line-height:1.3}
+.bcoach{font-size:12px;color:var(--ink-3)}
+.bscore{font-family:var(--display);font-weight:700;font-size:72px;line-height:.86;
+  letter-spacing:-.01em;font-variant-numeric:proportional-nums}
+.bmid{padding:22px 18px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;border-inline:1px solid var(--hair);background:var(--sunken)}
+.bfinal{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.2em;
+  color:var(--ink-3)}
+.qstrip{border-collapse:separate;border-spacing:0;font-family:var(--mono);font-size:12.5px;
+  font-variant-numeric:tabular-nums}
+.qstrip th{font-family:var(--display);font-weight:500;font-size:11px;letter-spacing:.1em;
+  color:var(--ink-3);padding:1px 7px;text-align:center;font-variant-numeric:normal}
+.qstrip td{padding:1px 7px;text-align:center;color:var(--ink-2)}
+.qstrip td.who{font-family:var(--display);font-weight:600;letter-spacing:.08em;text-align:left;
+  padding-right:10px}
+.qstrip td.win{color:var(--ink);font-weight:600}
+.won{position:relative}
+.won::after{content:"";position:absolute;inset-inline:0;bottom:-6px;height:2px;border-radius:2px}
+
+/* ---------- verdict ---------- */
+.verdict{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--tnt);
+  border-radius:3px;padding:18px 22px;display:flex;flex-direction:column;gap:9px}
+.verdict p{margin:0;max-width:66ch;color:var(--ink-2);font-size:14.5px}
+.verdict p strong{color:var(--ink);font-weight:600}
+.verdict .lede{font-size:16.5px;color:var(--ink)}
+
+/* ---------- decider tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);
+  border:1px solid var(--hair);border-radius:3px;overflow:hidden}
+.tile{background:var(--surface);padding:16px 17px 15px;display:flex;flex-direction:column;gap:3px}
+.tile .lab{font-size:12px;color:var(--ink-3);letter-spacing:.02em}
+.tile .val{font-size:29px;font-weight:700;line-height:1.08;font-variant-numeric:proportional-nums}
+.tile .sub{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.tile .sub .key{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
+.tile .note{font-size:12px;color:var(--ink-3);margin-top:2px}
+
+/* ---------- cards & charts ---------- */
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:3px;
+  padding:18px 20px 16px;min-width:0}
+.card-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+.card-top h3{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.05em;
+  text-transform:uppercase;flex:1 1 auto}
+.card-sub{font-size:13px;color:var(--ink-2);margin:0 0 12px;max-width:68ch}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.two>*{min-width:0}
+
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.legend .it{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.legend .k{width:12px;height:3px;border-radius:2px;flex:0 0 auto}
+.legend .k.sq{width:10px;height:10px;border-radius:2px}
+
+svg{display:block;width:100%;height:auto;overflow:visible}
+.gl{stroke:var(--hair);stroke-width:1;fill:none}
+.axl{fill:var(--ink-3);font-family:var(--body);font-size:11.5px}
+.axl.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.zline{stroke:var(--hair-2);stroke-width:1.5;fill:none}
+.pdiv{stroke:var(--hair);stroke-width:1;stroke-dasharray:none}
+.plab{fill:var(--ink-3);font-family:var(--display);font-size:11px;letter-spacing:.12em;font-weight:500}
+.ann{fill:var(--ink);font-size:12px;font-weight:600}
+.ann-s{fill:var(--ink-2);font-size:11.5px}
+.lead-line{stroke:var(--ink-3);stroke-width:1}
+.vcap{fill:var(--ink);font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums;
+  font-family:var(--mono)}
+.vcap.mut{fill:var(--ink-2);font-weight:500}
+.rowlab{fill:var(--ink);font-size:12.5px}
+.rowlab.s{fill:var(--ink-2);font-size:11.5px}
+
+/* toggle */
+.toggle{display:inline-flex;border:1px solid var(--hair-2);border-radius:3px;overflow:hidden;
+  flex:0 0 auto}
+.toggle button{appearance:none;background:var(--surface);border:0;color:var(--ink-2);
+  font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:500;padding:5px 11px;cursor:pointer;line-height:1.5}
+.toggle button+button{border-left:1px solid var(--hair-2)}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.toggle button:focus-visible{outline:2px solid var(--tnt);outline-offset:-2px}
+
+/* tooltip */
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--surface);
+  border:1px solid var(--hair-2);border-radius:3px;padding:8px 11px;font-size:12.5px;
+  box-shadow:0 6px 20px rgba(0,0,0,.14);min-width:132px;opacity:0;transition:opacity .09s}
+.tip.on{opacity:1}
+.tip .tt{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.04em;
+  margin-bottom:4px}
+.tip .tr{display:flex;align-items:center;gap:7px;justify-content:space-between;
+  font-variant-numeric:tabular-nums}
+.tip .tr b{font-weight:600}
+.tip .tr .nm{display:flex;align-items:center;gap:6px;color:var(--ink-2)}
+.tip .tr .nm i{width:9px;height:9px;border-radius:2px;display:block;flex:0 0 auto}
+.tip .tx{margin-top:5px;padding-top:5px;border-top:1px solid var(--hair);color:var(--ink-2);
+  font-size:12px;max-width:214px}
+
+/* ---------- tables ---------- */
+.tscroll{overflow-x:auto;margin-top:2px}
+table.data{border-collapse:collapse;width:100%;font-size:13px;
+  font-variant-numeric:tabular-nums}
+table.data th,table.data td{padding:6px 8px;text-align:right;white-space:nowrap;
+  border-bottom:1px solid var(--hair)}
+table.data th{font-family:var(--display);font-weight:500;font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);text-align:right;position:sticky;top:0;
+  background:var(--surface);font-variant-numeric:normal;cursor:pointer;user-select:none}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data th.l,table.data td.l{text-align:left}
+table.data td.nm{font-weight:600;color:var(--ink)}
+table.data td.no{font-family:var(--mono);color:var(--ink-3);font-size:12px}
+table.data tr.grp td{font-family:var(--display);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);background:var(--sunken);font-weight:500;
+  padding:4px 8px}
+table.data tr.tot td{font-weight:700;border-top:1.5px solid var(--hair-2);border-bottom:0;
+  background:var(--sunken)}
+table.data th[aria-sort] .ar{color:var(--ink)}
+table.data td.pos{color:var(--good);font-weight:600}
+table.data td.neg{color:var(--bad);font-weight:600}
+.imp{display:inline-block;font-family:var(--display);font-size:9.5px;letter-spacing:.1em;
+  font-weight:600;border:1px solid var(--hair-2);border-radius:2px;padding:0 4px;
+  margin-left:6px;color:var(--ink-3);vertical-align:1px}
+
+/* ---------- filter row ---------- */
+.filters{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.fgrp{display:flex;align-items:center;gap:8px}
+.fgrp>.eyebrow{font-size:11px}
+.chips{display:inline-flex;gap:0;border:1px solid var(--hair-2);border-radius:3px;overflow:hidden}
+.chips button{appearance:none;background:var(--surface);border:0;border-left:1px solid var(--hair-2);
+  color:var(--ink-2);font-family:var(--mono);font-size:12px;font-weight:500;padding:5px 11px;
+  cursor:pointer;line-height:1.5}
+.chips button:first-child{border-left:0}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.chips button:focus-visible{outline:2px solid var(--tnt);outline-offset:-2px}
+
+/* ---------- play by play ---------- */
+.pbp{max-height:460px;overflow-y:auto;border-top:1px solid var(--hair)}
+.ev{display:grid;grid-template-columns:54px 12px 1fr auto;gap:11px;align-items:baseline;
+  padding:7px 4px;border-bottom:1px solid var(--hair);font-size:13.5px}
+.ev .clk{font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ev .bar{width:3px;height:13px;border-radius:2px;align-self:center}
+.ev .txt{min-width:0}
+.ev .who{font-weight:600}
+.ev .act{color:var(--ink-2)}
+.ev .sc{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ev.score .sc{color:var(--ink);font-weight:600}
+.ev.score .act{color:var(--ink)}
+.pbp-empty{padding:26px 6px;color:var(--ink-3);font-size:13.5px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--hair);padding-top:18px;color:var(--ink-3);font-size:12.5px;
+  display:flex;flex-direction:column;gap:5px}
+footer a{color:var(--ink-2);text-decoration-color:var(--hair-2)}
+
+.hidden{display:none!important}
+
+/* ---------- view tabs & conference switch ---------- */
+.topbar{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:flex-end;justify-content:space-between}
+.tabs{display:inline-flex;border-bottom:2px solid var(--hair);gap:2px}
+.tabs button{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+  margin-bottom:-2px;color:var(--ink-3);font-family:var(--display);font-size:15px;
+  letter-spacing:.06em;text-transform:uppercase;font-weight:600;padding:7px 2px;cursor:pointer}
+.tabs button+button{margin-left:22px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--tnt)}
+.tabs button:focus-visible{outline:2px solid var(--tnt);outline-offset:3px}
+
+/* ---------- league stat strip ---------- */
+.lstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--hair);
+  border:1px solid var(--hair);border-radius:3px;overflow:hidden}
+.lstrip .c{background:var(--surface);padding:13px 15px;display:flex;flex-direction:column;gap:2px}
+.lstrip .c .k{font-size:11.5px;color:var(--ink-3)}
+.lstrip .c .v{font-size:22px;font-weight:700;font-variant-numeric:proportional-nums;
+  line-height:1.15}
+.lstrip .c .s{font-size:11.5px;color:var(--ink-3)}
+
+/* ---------- leader cards ---------- */
+.leads{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.lead{background:var(--surface);border:1px solid var(--hair);border-radius:3px;padding:14px 15px}
+.lead h4{margin:0 0 9px;font-family:var(--display);font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600;display:flex;
+  justify-content:space-between;align-items:baseline;gap:8px}
+.lead h4 span{font-family:var(--body);font-size:10.5px;letter-spacing:0;text-transform:none}
+.lrow{display:grid;grid-template-columns:15px 1fr auto;gap:8px;align-items:baseline;
+  font-size:13px;padding:3px 0}
+.lrow .r{color:var(--ink-3);font-family:var(--mono);font-size:11px}
+.lrow .n{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .n b{font-weight:600}
+.lrow .n i{font-style:normal;color:var(--ink-3);font-size:11.5px;margin-left:5px}
+.lrow .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600}
+.lrow.top .v{color:var(--tnt)}
+
+/* ---------- search ---------- */
+.search{appearance:none;background:var(--surface);border:1px solid var(--hair-2);border-radius:3px;
+  color:var(--ink);font-family:var(--body);font-size:13px;padding:6px 10px;min-width:150px}
+.search::placeholder{color:var(--ink-3)}
+.search:focus-visible{outline:2px solid var(--tnt);outline-offset:-1px}
+select.search{cursor:pointer}
+
+table.data tr.unqual td{opacity:.6}
+table.data td.tm{font-family:var(--display);font-weight:600;letter-spacing:.06em;
+  color:var(--ink-2);font-size:12px}
+.tallscroll{max-height:620px;overflow:auto}
+.tallscroll table.data th{position:sticky;top:0;z-index:2}
+.rowcount{font-size:12px;color:var(--ink-3)}
+
+
+/* ---------- efficiency strip ---------- */
+.eff{display:grid;grid-template-columns:1fr auto auto;gap:0 18px;align-items:center}
+.eff .hrow{font-family:var(--display);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);padding-bottom:7px;border-bottom:1px solid var(--hair);text-align:right}
+.eff .hrow.l{text-align:left}
+.eff .lab{font-size:13.5px;color:var(--ink-2);padding:9px 0;border-bottom:1px solid var(--hair)}
+.eff .lab b{color:var(--ink);font-weight:600;display:block}
+.eff .lab span{font-size:11.5px;color:var(--ink-3)}
+.eff .v{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;text-align:right;
+  padding:9px 0;border-bottom:1px solid var(--hair);min-width:64px}
+.eff .v.win{font-weight:600}
+.eff .v.dim{color:var(--ink-3)}
+.eff .shared{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;padding-top:11px;font-size:13px;color:var(--ink-2);flex-wrap:wrap}
+.eff .shared b{font-family:var(--mono);font-size:15px;color:var(--ink);font-weight:600}
+
+/* ---------- assist creation ---------- */
+.cre{display:flex;flex-direction:column;gap:16px}
+.cre-team{display:flex;flex-direction:column;gap:8px}
+.cre-head{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.cre-head b{font-family:var(--mono);font-size:14px;color:var(--ink);letter-spacing:0;margin-left:auto}
+.cre-row{display:grid;grid-template-columns:116px minmax(0,1fr) 26px;gap:10px;
+  align-items:center;font-size:13px}
+.cre-row .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cre-row .bar{height:10px;border-radius:2px;min-width:2px}
+.cre-row .n{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;text-align:right}
+.cre-to{grid-column:2/-1;min-width:0;font-size:12px;color:var(--ink-3);margin:-4px 0 4px;
+  overflow-wrap:anywhere}
+
+/* ---------- caveat panel ---------- */
+.caveat{display:flex;flex-direction:column;gap:13px}
+.caveat .item{display:flex;flex-direction:column;gap:3px}
+.caveat .item h4{margin:0;font-family:var(--display);font-size:12px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-2);font-weight:600}
+.caveat .item p{margin:0;font-size:13px;color:var(--ink-3);max-width:60ch}
+
+table.data tr.lowmin td{opacity:.62}
+.dotlab{fill:var(--ink);font-size:11.5px;font-weight:600}
+.dotlab.s{fill:var(--ink-2);font-size:11px;font-weight:400}
+
+@media (max-width:860px){
+  .two{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .wrap{padding-block:20px 48px;gap:24px}
+  .board{grid-template-columns:1fr;}
+  .bmid{border-inline:0;border-block:1px solid var(--hair);order:0}
+  .bteam,.bteam.r{align-items:flex-start;text-align:left;padding:16px 18px;
+    flex-direction:row;justify-content:space-between;align-items:center;gap:14px}
+  .bteam.r .btag{flex-direction:row}
+  .bscore{font-size:46px}
+  .tiles{grid-template-columns:1fr}
+  .ev{grid-template-columns:50px 10px 1fr;row-gap:2px}
+  .ev .sc{grid-column:3;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+  <!-- ============ PAGE HEAD + VIEW TABS ============ -->
+  <header class="mast">
+    <div class="kicker eyebrow">
+      <span>Philippine Basketball Association</span><i class="dot-sep"></i>
+      <span>50th Season</span><i class="dot-sep"></i>
+      <span id="lg-scope">—</span>
+    </div>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:-.005em">
+      PBA 50th Season Advanced Stats
+    </h1>
+  </header>
+
+  <div class="topbar">
+    <div class="tabs" role="tablist" aria-label="View">
+      <button type="button" id="tab-league" role="tab" aria-selected="true">League</button>
+      <button type="button" id="tab-game" role="tab" aria-selected="false">Game 601</button>
+    </div>
+    <div class="fgrp" id="confwrap">
+      <span class="eyebrow">Conference</span>
+      <div class="chips" role="group" aria-label="Conference">
+        <button type="button" data-conf="gov" aria-pressed="true">Governors&rsquo;</button>
+        <button type="button" data-conf="comm" aria-pressed="false">Commissioner&rsquo;s</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LEAGUE VIEW ============ -->
+  <div id="view-league">
+    <div style="display:flex;flex-direction:column;gap:30px">
+
+      <section>
+        <div class="lstrip" id="lg-strip"></div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Standings and team efficiency</h2>
+          <p>Sorted by record. Click any column to re-sort. Ratings are per 100 possessions,
+            pace is possessions per 48 minutes.</p>
+        </div>
+        <div class="card"><div class="tscroll" id="lg-standings"></div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-top">
+          <h3>Offence vs. defence</h3>
+          <div class="toggle" role="group" aria-label="Offence versus defence view">
+            <button type="button" id="od-chart" aria-pressed="true">Chart</button>
+            <button type="button" id="od-table" aria-pressed="false">Table</button>
+          </div>
+        </div>
+        <p class="card-sub">Each team's points scored and allowed per 100 possessions. The
+          defensive axis is inverted, so the best teams sit top-right and the diagonal is
+          break-even.</p>
+        <div id="od-wrap"></div>
+        <div id="od-tbl" class="tscroll hidden"></div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>League leaders</h2>
+          <p id="lg-qual">—</p>
+        </div>
+        <div class="leads" id="lg-leaders"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-top">
+          <h3>Usage vs. true shooting</h3>
+          <div class="toggle" role="group" aria-label="League usage versus true shooting view">
+            <button type="button" id="lsc-chart" aria-pressed="true">Chart</button>
+            <button type="button" id="lsc-table" aria-pressed="false">Table</button>
+          </div>
+        </div>
+        <p class="card-sub">Every qualified player. Volume on the horizontal axis, efficiency on
+          the vertical. Bubble size is minutes played; the line is the conference average.</p>
+        <div id="lsc-wrap"></div>
+        <div id="lsc-tbl" class="tscroll hidden"></div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>Player explorer</h2>
+          <p>Every player in the conference. Sort any column; switch between per-game, totals and
+            advanced views. Players below the leaderboard qualifier are dimmed.</p>
+        </div>
+        <div class="card">
+          <div class="filters">
+            <div class="fgrp">
+              <span class="eyebrow">View</span>
+              <div class="chips" role="group" aria-label="Stat view">
+                <button type="button" data-pv="pg" aria-pressed="true">Per game</button>
+                <button type="button" data-pv="tot" aria-pressed="false">Totals</button>
+                <button type="button" data-pv="adv" aria-pressed="false">Advanced</button>
+              </div>
+            </div>
+            <div class="fgrp">
+              <span class="eyebrow">Team</span>
+              <select class="search" id="pf-team" aria-label="Filter by team"></select>
+            </div>
+            <div class="fgrp">
+              <span class="eyebrow">Player</span>
+              <input class="search" id="pf-name" type="search" placeholder="Search name"
+                autocomplete="off" aria-label="Search player name">
+            </div>
+            <div class="fgrp">
+              <div class="chips" role="group" aria-label="Qualifier">
+                <button type="button" id="pf-qual" aria-pressed="false">Qualified only</button>
+              </div>
+            </div>
+            <span class="rowcount" id="pf-count"></span>
+          </div>
+          <div class="tscroll tallscroll" id="lg-players"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <h2>How these are calculated</h2>
+          <p>And which advanced stats are deliberately missing.</p>
+        </div>
+        <div class="two">
+          <div class="card"><div class="caveat" id="lg-method"></div></div>
+          <div class="card"><div class="caveat" id="lg-limits"></div></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ============ GAME VIEW ============ -->
+  <div id="view-game" class="hidden">
+    <div style="display:flex;flex-direction:column;gap:30px">
+  <!-- ============ GAME MASTHEAD ============ -->
+  <header class="mast">
+    <div class="kicker eyebrow">
+      <span>PBA 50th Season &middot; Governors&rsquo; Cup</span><i class="dot-sep"></i>
+      <span>Game 601</span><i class="dot-sep"></i>
+      <span id="m-date">—</span><i class="dot-sep"></i>
+      <span id="m-venue">—</span>
+    </div>
+    <h1 style="font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:-.005em">
+      Magnolia led for one possession all night
+    </h1>
+  </header>
+
+  <!-- ============ SCOREBOARD ============ -->
+  <section class="board" id="board"></section>
+
+  <!-- ============ VERDICT ============ -->
+  <section class="verdict">
+    <p class="lede">TNT won the perimeter and the ball, and that was the whole game &mdash;
+      Magnolia actually won the glass and shot better inside the arc.</p>
+    <p>The Hotshots out-rebounded TNT <strong>49&ndash;47</strong>, took more offensive boards
+      (<strong>13&ndash;11</strong>), and were the better two-point team
+      (<strong>52.1%</strong> to <strong>50.9%</strong>). They still lost by 22, because they went
+      <strong>3-of-26 from three</strong> &mdash; 11.5% &mdash; and coughed up
+      <strong>15 turnovers to TNT&rsquo;s 9</strong>. TNT turned that into a
+      <strong>26&ndash;15</strong> edge in perimeter points and <strong>13&ndash;8</strong> in points
+      off turnovers, with <strong>17 assists against 8</strong>.</p>
+    <p>Magnolia&rsquo;s only lead of the night was <strong>29&ndash;28</strong> with 5:31 left in the
+      second. The game&rsquo;s last tie came at 31&ndash;31; TNT answered with a 9&ndash;0 run,
+      led by double figures from the opening minute of the third quarter onward, and peaked at
+      <strong>+25</strong>.</p>
+  </section>
+
+  <!-- ============ DECIDERS ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>What decided it</h2>
+      <p>The four margins that separate a two-point game at the half from a 22-point final.</p>
+    </div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <!-- ============ EFFICIENCY + FOUR FACTORS ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Efficiency and the four factors</h2>
+      <p>Raw totals flatter whoever had the ball more. These are rate stats &mdash; how well each
+        team used a possession, not how many it got.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <div class="card-top"><h3>Team ratings</h3></div>
+        <p class="card-sub">Points scored and allowed per 100 possessions. Both teams face the same
+          possession count, so the net ratings are mirror images.</p>
+        <div class="eff" id="eff"></div>
+      </div>
+      <div class="card">
+        <div class="card-top"><h3>Four factors</h3></div>
+        <p class="card-sub">Dean Oliver&rsquo;s framework &mdash; shooting, turnovers, rebounding,
+          free throws &mdash; in the order they usually decide games. All four are percentages,
+          so they share one axis.</p>
+        <div class="legend" style="margin-bottom:6px">
+          <span class="it"><i class="k sq" style="background:var(--mag)"></i>Magnolia</span>
+          <span class="it"><i class="k sq" style="background:var(--tnt)"></i>TNT</span>
+        </div>
+        <div id="ff-wrap"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MARGIN TIMELINE ============ -->
+  <section class="card">
+    <div class="card-top">
+      <h3>Scoring margin</h3>
+      <div class="toggle" role="group" aria-label="Scoring margin view">
+        <button type="button" id="mg-chart" aria-pressed="true">Chart</button>
+        <button type="button" id="mg-table" aria-pressed="false">Table</button>
+      </div>
+    </div>
+    <p class="card-sub">TNT&rsquo;s lead through all 48 minutes, rebuilt from the play-by-play.
+      Above the line is TNT ahead; below it is Magnolia. Hover for the score at any moment.</p>
+    <div class="legend" style="margin-bottom:8px">
+      <span class="it"><i class="k sq" style="background:var(--tnt)"></i>TNT ahead</span>
+      <span class="it"><i class="k sq" style="background:var(--mag)"></i>Magnolia ahead</span>
+    </div>
+    <div id="mg-wrap"></div>
+    <div id="mg-tbl" class="tscroll hidden"></div>
+  </section>
+
+  <!-- ============ QUARTERS + SHOT PROFILE ============ -->
+  <div class="two">
+    <section class="card">
+      <div class="card-top"><h3>Quarter by quarter</h3></div>
+      <p class="card-sub">PBA plays 12-minute quarters. TNT won all four.</p>
+      <div class="legend" style="margin-bottom:6px">
+        <span class="it"><i class="k sq" style="background:var(--mag)"></i>Magnolia</span>
+        <span class="it"><i class="k sq" style="background:var(--tnt)"></i>TNT</span>
+      </div>
+      <div id="q-wrap"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-top"><h3>Shooting by shot type</h3></div>
+      <p class="card-sub">Every field-goal attempt, classified from the play-by-play. Magnolia was
+        the better finisher at the rim and the worse one everywhere else.</p>
+      <div class="legend" style="margin-bottom:6px">
+        <span class="it"><i class="k sq" style="background:var(--mag)"></i>Magnolia</span>
+        <span class="it"><i class="k sq" style="background:var(--tnt)"></i>TNT</span>
+      </div>
+      <div id="sp-wrap"></div>
+      <p class="card-sub" style="margin:10px 0 0;font-size:12px;color:var(--ink-3)">
+        The 4-point line is a PBA 50th-season rule. TNT took the only two attempts of the game
+        and missed both.</p>
+    </section>
+  </div>
+
+  <!-- ============ USAGE VS EFFICIENCY ============ -->
+  <section class="card">
+    <div class="card-top">
+      <h3>Usage vs. true shooting</h3>
+      <div class="toggle" role="group" aria-label="Usage versus true shooting view">
+        <button type="button" id="sc-chart" aria-pressed="true">Chart</button>
+        <button type="button" id="sc-table" aria-pressed="false">Table</button>
+      </div>
+    </div>
+    <p class="card-sub">How much of his team&rsquo;s offence each player used while on the floor,
+      against how efficiently he turned it into points. Up is better, right is busier, and bubble
+      size is minutes played. Players under 8 minutes are left out &mdash; their rates are noise.</p>
+    <div class="legend" style="margin-bottom:8px">
+      <span class="it"><i class="k sq" style="background:var(--mag)"></i>Magnolia</span>
+      <span class="it"><i class="k sq" style="background:var(--tnt)"></i>TNT</span>
+      <span class="it"><i class="k" style="background:var(--hair-2);height:2px"></i>Game-average TS%</span>
+    </div>
+    <div id="sc-wrap"></div>
+    <div id="sc-tbl" class="tscroll hidden"></div>
+  </section>
+
+  <div class="two">
+    <section class="card">
+      <div class="card-top"><h3>Who created the shots</h3></div>
+      <p class="card-sub">Every assist in the game, by passer, with who finished it. TNT assisted
+        48.6% of its field goals; Magnolia 28.6%.</p>
+      <div class="cre" id="cre"></div>
+    </section>
+    <section class="card">
+      <div class="card-top"><h3>What isn&rsquo;t here</h3></div>
+      <p class="card-sub">Two families of advanced stat can&rsquo;t be computed honestly from this
+        feed, so they are left out rather than estimated.</p>
+      <div class="caveat" id="caveat"></div>
+    </section>
+  </div>
+
+  <!-- ============ TEAM COMPARISON ============ -->
+  <section class="card">
+    <div class="card-top">
+      <h3>Team comparison</h3>
+      <div class="toggle" role="group" aria-label="Team comparison view">
+        <button type="button" id="cm-chart" aria-pressed="true">Chart</button>
+        <button type="button" id="cm-table" aria-pressed="false">Table</button>
+      </div>
+    </div>
+    <p class="card-sub">Each row is scaled to the larger of the two values, so bar length compares
+      within a row only. Percentages and counts are labelled in their own units.</p>
+    <div class="legend" style="margin-bottom:10px">
+      <span class="it"><i class="k sq" style="background:var(--mag)"></i>Magnolia</span>
+      <span class="it"><i class="k sq" style="background:var(--tnt)"></i>TNT</span>
+    </div>
+    <div id="cm-wrap"></div>
+    <div id="cm-tbl" class="tscroll hidden"></div>
+  </section>
+
+  <!-- ============ BOX SCORES ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Box score</h2>
+      <p>Click any column to sort. <span class="imp">IMP</span> marks the Governors&rsquo; Cup
+        import. <code style="font-family:var(--mono);font-size:12px">Fls on</code> is fouls drawn. Switch to <strong>Advanced</strong> for rate stats; rows under 8 minutes are dimmed because their rates rest on almost no sample.</p>
+    </div>
+    <div class="card">
+      <div class="filters">
+        <div class="fgrp">
+          <span class="eyebrow">Team</span>
+          <div class="chips" role="group" aria-label="Box score team">
+            <button type="button" id="bx-MAG" aria-pressed="true">Magnolia</button>
+            <button type="button" id="bx-TNT" aria-pressed="false">TNT</button>
+          </div>
+        </div>
+        <div class="fgrp">
+          <span class="eyebrow">Columns</span>
+          <div class="chips" role="group" aria-label="Box score columns">
+            <button type="button" id="bx-basic" aria-pressed="true">Basic</button>
+            <button type="button" id="bx-adv" aria-pressed="false">Advanced</button>
+          </div>
+        </div>
+      </div>
+      <div id="bx-wrap" class="tscroll"></div>
+    </div>
+  </section>
+
+  <!-- ============ PLAY BY PLAY ============ -->
+  <section>
+    <div class="sec-head">
+      <h2>Play-by-play</h2>
+      <p><span id="pbp-count">429</span> logged events. Filters apply to the list below.</p>
+    </div>
+    <div class="card" style="padding-bottom:6px">
+      <div class="filters">
+        <div class="fgrp">
+          <span class="eyebrow">Period</span>
+          <div class="chips" role="group" aria-label="Period">
+            <button type="button" data-per="all" aria-pressed="true">All</button>
+            <button type="button" data-per="1" aria-pressed="false">Q1</button>
+            <button type="button" data-per="2" aria-pressed="false">Q2</button>
+            <button type="button" data-per="3" aria-pressed="false">Q3</button>
+            <button type="button" data-per="4" aria-pressed="false">Q4</button>
+          </div>
+        </div>
+        <div class="fgrp">
+          <span class="eyebrow">Team</span>
+          <div class="chips" role="group" aria-label="Team">
+            <button type="button" data-tm="all" aria-pressed="true">Both</button>
+            <button type="button" data-tm="MAG" aria-pressed="false">MAG</button>
+            <button type="button" data-tm="TNT" aria-pressed="false">TNT</button>
+          </div>
+        </div>
+        <div class="fgrp">
+          <span class="eyebrow">Event</span>
+          <div class="chips" role="group" aria-label="Event type">
+            <button type="button" data-ty="all" aria-pressed="true">All</button>
+            <button type="button" data-ty="score" aria-pressed="false">Scores</button>
+            <button type="button" data-ty="shot" aria-pressed="false">Shots</button>
+            <button type="button" data-ty="rebound" aria-pressed="false">Rebounds</button>
+            <button type="button" data-ty="turnover" aria-pressed="false">Turnovers</button>
+          </div>
+        </div>
+      </div>
+      <div class="pbp" id="pbp"></div>
+    </div>
+  </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <div>Built from the official PBA match feed &mdash; 177 games across two conferences,
+      parsed from
+      <a href="https://pba.ph/recap?match=601">pba.ph</a>. Every game was checked before use:
+      the running score rebuilt from scoring events had to match the printed scorelines and the
+      official quarter table, and the box score had to sum to the final. All 177 passed.</div>
+    <div>Win Shares are validated against real results: they sum to 73.7 against 74 actual wins
+      in the Governors&rsquo; Cup and 102.4 against 103 in the Commissioner&rsquo;s Cup. PER is
+      normalised so each conference averages exactly 15.00.</div>
+  </footer>
+</div>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const LG = __LEAGUE__;
+const D = LG.game601;
+const TEAM = {
+  MAG:{ab:"MAG",short:"Magnolia",name:D.teams.MAG.name,coach:D.teams.MAG.coach,
+        v:"var(--mag)",wash:"var(--mag-wash)"},
+  TNT:{ab:"TNT",short:"TNT",name:D.teams.TNT.name,coach:D.teams.TNT.coach,
+        v:"var(--tnt)",wash:"var(--tnt-wash)"}
+};
+const IMPORTS = {"K. Buffen":1,"R. Hollis-Jefferson":1};
+const SVGNS = "http://www.w3.org/2000/svg";
+const el = (t,a,p) => { const n=document.createElementNS(SVGNS,t);
+  for(const k in (a||{})) n.setAttribute(k,a[k]);
+  if(p!==undefined) n.textContent=p; return n; };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ===================== MASTHEAD + SCOREBOARD ===================== */
+(function(){
+  const [mm,dd,yy] = D.meta.datetime.split(" ")[0].split("/");
+  const MON=["January","February","March","April","May","June","July","August",
+             "September","October","November","December"];
+  document.getElementById("m-date").textContent =
+    MON[+mm-1]+" "+(+dd)+", 20"+yy;
+  document.getElementById("m-venue").textContent = D.meta.venue;
+
+  const q = D.quarters, F = {MAG:70, TNT:92};
+  const side = (k,right) => `
+    <div class="bteam${right?" r":""}">
+      <div style="min-width:0">
+        <div class="btag" style="color:${TEAM[k].v}">
+          <i class="swatch" style="background:${TEAM[k].v}"></i>${TEAM[k].ab}
+        </div>
+        <div class="bname">${esc(TEAM[k].name)}</div>
+        <div class="bcoach">${esc(TEAM[k].coach)}</div>
+      </div>
+      <div class="bscore" style="${k==="TNT"?"":"color:var(--ink-2)"}">${F[k]}</div>
+    </div>`;
+  const row = k => `<tr>
+      <td class="who" style="color:${TEAM[k].v}">${TEAM[k].ab}</td>
+      ${q[k].map((v,i)=>`<td class="${q[k][i]>q[k==="MAG"?"TNT":"MAG"][i]?"win":""}">${v}</td>`).join("")}
+      <td class="win" style="border-left:1px solid var(--hair);padding-left:10px">${F[k]}</td>
+    </tr>`;
+  document.getElementById("board").innerHTML =
+    side("MAG") +
+    `<div class="bmid">
+       <div class="bfinal">FINAL</div>
+       <table class="qstrip">
+         <thead><tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th>
+           <th style="border-left:1px solid var(--hair);padding-left:10px">T</th></tr></thead>
+         <tbody>${row("MAG")}${row("TNT")}</tbody>
+       </table>
+     </div>` +
+    side("TNT",true);
+})();
+
+/* ===================== DECIDER TILES ===================== */
+(function(){
+  const cmp = {}; D.comparison.forEach(c=>cmp[c.label]=c);
+  const tiles = [
+    {lab:"Three-point shooting", val:"3-26", sub:"Magnolia, 11.5%", k:"MAG",
+     note:"TNT 6-19, 31.6%"},
+    {lab:"Turnovers", val:"15", sub:"Magnolia gave it away", k:"MAG",
+     note:"TNT 9 — and 13 points off them to Magnolia's 8"},
+    {lab:"Assists", val:"17", sub:"TNT", k:"TNT",
+     note:"Magnolia 8 — fewest of either team all game"},
+    {lab:"Rebounds", val:"49", sub:"Magnolia won the glass", k:"MAG",
+     note:"TNT 47 — and it still wasn't close on the scoreboard"}
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(t=>`
+    <div class="tile">
+      <div class="lab">${esc(t.lab)}</div>
+      <div class="val" style="color:${TEAM[t.k].v}">${esc(t.val)}</div>
+      <div class="sub"><i class="key" style="background:${TEAM[t.k].v}"></i>${esc(t.sub)}</div>
+      <div class="note">${esc(t.note)}</div>
+    </div>`).join("");
+})();
+
+/* ===================== TOOLTIP ===================== */
+const tip = document.getElementById("tip");
+function showTip(html, x, y){
+  tip.innerHTML = html; tip.classList.add("on");
+  const r = tip.getBoundingClientRect();
+  let left = x + 14, top = y - r.height - 12;
+  if(left + r.width > innerWidth - 8) left = x - r.width - 14;
+  if(left < 8) left = 8;
+  if(top < 8) top = y + 16;
+  tip.style.left = left+"px"; tip.style.top = top+"px";
+}
+const hideTip = () => tip.classList.remove("on");
+
+/* ===================== MARGIN TIMELINE ===================== */
+(function(){
+  const W=920, H=372, L=46, R=20, T=24, B=46;
+  const pw = W-L-R, ph = H-T-B;
+  const Y0=-5, Y1=27, X1=2880;
+  const x = t => L + t/X1*pw;
+  const y = m => T + (Y1-m)/(Y1-Y0)*ph;
+  const pts = D.timeline;
+
+  const svg = el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
+    "aria-label":"TNT's scoring margin across all four quarters, peaking at plus 25."});
+
+  // gridlines + y ticks
+  [-5,0,5,10,15,20,25].forEach(v=>{
+    svg.appendChild(el("line",{x1:L,x2:L+pw,y1:y(v),y2:y(v),
+      class: v===0 ? "zline" : "gl"}));
+    const lab = el("text",{x:L-9,y:y(v)+4,class:"axl mono","text-anchor":"end"},
+      v===0 ? "0" : (v>0?"+"+v:String(v)));
+    svg.appendChild(lab);
+  });
+
+  // step path (score changes are discrete)
+  let d = "";
+  pts.forEach((p,i)=>{
+    if(i===0){ d = `M ${x(p.t)} ${y(p.m)}`; }
+    else { d += ` L ${x(p.t)} ${y(pts[i-1].m)} L ${x(p.t)} ${y(p.m)}`; }
+  });
+  const lastP = pts[pts.length-1];
+
+  // diverging fills, clipped above/below the zero line
+  const defs = el("defs");
+  const mk = (id,yy,hh)=>{ const c=el("clipPath",{id});
+    c.appendChild(el("rect",{x:L,y:yy,width:pw,height:hh})); defs.appendChild(c); };
+  mk("clipUp", T, y(0)-T);
+  mk("clipDn", y(0), T+ph-y(0));
+  svg.appendChild(defs);
+  const area = d + ` L ${x(lastP.t)} ${y(0)} L ${x(pts[0].t)} ${y(0)} Z`;
+  svg.appendChild(el("path",{d:area,fill:"var(--tnt-wash)",stroke:"none","clip-path":"url(#clipUp)"}));
+  svg.appendChild(el("path",{d:area,fill:"var(--mag-wash)",stroke:"none","clip-path":"url(#clipDn)"}));
+  svg.appendChild(el("path",{d,fill:"none",stroke:"var(--tnt)","stroke-width":2,
+    "stroke-linejoin":"round","stroke-linecap":"round","clip-path":"url(#clipUp)"}));
+  svg.appendChild(el("path",{d,fill:"none",stroke:"var(--mag)","stroke-width":2,
+    "stroke-linejoin":"round","stroke-linecap":"round","clip-path":"url(#clipDn)"}));
+
+  // period dividers + labels
+  for(let p=1;p<=4;p++){
+    if(p>1) svg.appendChild(el("line",{x1:x((p-1)*720),x2:x((p-1)*720),y1:T,y2:T+ph,class:"pdiv"}));
+    svg.appendChild(el("text",{x:x((p-1)*720+360),y:T+ph+18,class:"plab","text-anchor":"middle"},
+      "Q"+p));
+  }
+  // x axis baseline
+  svg.appendChild(el("line",{x1:L,x2:L+pw,y1:T+ph,y2:T+ph,class:"gl"}));
+  // quarter-end scores along the bottom
+  [1,2,3,4].forEach(p=>{
+    const last = pts.filter(q=>q.t<=p*720).pop();
+    svg.appendChild(el("text",{x:x(p*720-360),y:T+ph+33,class:"axl mono","text-anchor":"middle"},
+      last.mag+"–"+last.tnt));
+  });
+
+  // annotations: TNT peak, Magnolia's only lead
+  const peak = pts.reduce((a,b)=> b.m>a.m ? b : a, pts[0]);
+  svg.appendChild(el("circle",{cx:x(peak.t),cy:y(peak.m),r:4.5,fill:"var(--tnt)",
+    stroke:"var(--surface)","stroke-width":2}));
+  svg.appendChild(el("text",{x:x(peak.t)-10,y:y(peak.m)-9,class:"ann","text-anchor":"end"},
+    "TNT +"+peak.m));
+  svg.appendChild(el("text",{x:x(peak.t)-10,y:y(peak.m)+5,class:"ann-s","text-anchor":"end"},
+    "Q"+peak.p+" "+peak.clock));
+
+  const dip = pts.reduce((a,b)=> b.m<a.m ? b : a, pts[0]);
+  svg.appendChild(el("circle",{cx:x(dip.t),cy:y(dip.m),r:4.5,fill:"var(--mag)",
+    stroke:"var(--surface)","stroke-width":2}));
+  svg.appendChild(el("line",{x1:x(dip.t),y1:y(dip.m)+7,x2:x(dip.t),y2:y(-2.9),class:"lead-line"}));
+  svg.appendChild(el("text",{x:x(dip.t)+7,y:y(-2.9)+4,class:"ann"},
+    "Magnolia’s only lead, 29–28"));
+
+  // crosshair + hover
+  const cross = el("line",{x1:0,x2:0,y1:T,y2:T+ph,stroke:"var(--hair-2)","stroke-width":1,
+    opacity:0});
+  const mark = el("circle",{r:5,fill:"var(--ink)",stroke:"var(--surface)","stroke-width":2,
+    opacity:0});
+  svg.appendChild(cross); svg.appendChild(mark);
+  const hit = el("rect",{x:L,y:T,width:pw,height:ph,fill:"transparent",style:"cursor:crosshair"});
+  svg.appendChild(hit);
+
+  function at(evt){
+    const r = svg.getBoundingClientRect();
+    const sx = (evt.clientX - r.left) / r.width * W;
+    const t = Math.max(0, Math.min(X1, (sx - L)/pw*X1));
+    let p = pts[0];
+    for(const q of pts){ if(q.t<=t) p=q; else break; }
+    cross.setAttribute("x1",x(p.t)); cross.setAttribute("x2",x(p.t));
+    cross.setAttribute("opacity",1);
+    mark.setAttribute("cx",x(p.t)); mark.setAttribute("cy",y(p.m));
+    mark.setAttribute("fill", p.m>0?"var(--tnt)":(p.m<0?"var(--mag)":"var(--ink-2)"));
+    mark.setAttribute("opacity",1);
+    const lead = p.m===0 ? "Tied" : (p.m>0 ? "TNT +"+p.m : "Magnolia +"+(-p.m));
+    showTip(
+      `<div class="tt">Q${p.p} &middot; ${p.clock}</div>
+       <div class="tr"><span class="nm"><i style="background:var(--mag)"></i>MAG</span><b>${p.mag}</b></div>
+       <div class="tr"><span class="nm"><i style="background:var(--tnt)"></i>TNT</span><b>${p.tnt}</b></div>
+       <div class="tx">${lead}${p.who?` &middot; ${esc(p.who)}, ${esc(p.what||"")}`:""}</div>`,
+      evt.clientX, evt.clientY);
+  }
+  hit.addEventListener("mousemove",at);
+  hit.addEventListener("mouseleave",()=>{ hideTip();
+    cross.setAttribute("opacity",0); mark.setAttribute("opacity",0); });
+  document.getElementById("mg-wrap").appendChild(svg);
+
+  // table twin
+  document.getElementById("mg-tbl").innerHTML =
+    `<table class="data"><thead><tr><th class="l">Period</th><th>Clock</th>
+      <th>MAG</th><th>TNT</th><th>Margin</th><th class="l">Scoring play</th></tr></thead><tbody>` +
+    pts.filter(p=>p.who).map(p=>`<tr><td class="l">Q${p.p}</td><td>${p.clock}</td>
+      <td>${p.mag}</td><td>${p.tnt}</td>
+      <td class="${p.m>0?"pos":(p.m<0?"neg":"")}">${p.m>0?"+"+p.m:p.m}</td>
+      <td class="l">${esc(p.who)} &mdash; ${esc(p.what||"")}</td></tr>`).join("") +
+    `</tbody></table>`;
+
+  wireToggle("mg", "mg-wrap", "mg-tbl");
+})();
+
+function wireToggle(id, chartId, tableId){
+  const bc = document.getElementById(id+"-chart"), bt = document.getElementById(id+"-table");
+  const c = document.getElementById(chartId), t = document.getElementById(tableId);
+  const set = showChart => {
+    bc.setAttribute("aria-pressed", showChart); bt.setAttribute("aria-pressed", !showChart);
+    c.classList.toggle("hidden", !showChart); t.classList.toggle("hidden", showChart);
+    if(!showChart) hideTip();
+  };
+  bc.addEventListener("click",()=>set(true)); bt.addEventListener("click",()=>set(false));
+}
+
+/* ===================== QUARTER COLUMNS ===================== */
+(function(){
+  const W=460, H=250, L=32, R=12, T=22, B=40;
+  const pw=W-L-R, ph=H-T-B, MAXY=28;
+  const svg = el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
+    "aria-label":"Points per quarter: TNT won every quarter."});
+  const y = v => T + (1 - v/MAXY)*ph;
+  [0,10,20].forEach(v=>{
+    svg.appendChild(el("line",{x1:L,x2:L+pw,y1:y(v),y2:y(v),class:"gl"}));
+    svg.appendChild(el("text",{x:L-8,y:y(v)+4,class:"axl mono","text-anchor":"end"},String(v)));
+  });
+  const band = pw/4, BW=22, GAP=2;
+  for(let i=0;i<4;i++){
+    const cx = L + band*i + band/2;
+    [["MAG",-1],["TNT",1]].forEach(([k,s])=>{
+      const v = D.quarters[k][i];
+      const bx = cx + (s<0 ? -BW-GAP/2 : GAP/2);
+      const h = ph - (y(v)-T);
+      svg.appendChild(el("path",{
+        d:`M ${bx} ${y(v)+4} q 0 -4 4 -4 h ${BW-8} q 4 0 4 4 v ${h-4} h ${-BW} Z`,
+        fill:TEAM[k].v}));
+      svg.appendChild(el("text",{x:bx+BW/2,y:y(v)-7,class:"vcap","text-anchor":"middle"},String(v)));
+    });
+    svg.appendChild(el("text",{x:cx,y:T+ph+18,class:"plab","text-anchor":"middle"},"Q"+(i+1)));
+    const dm = D.quarters.TNT[i]-D.quarters.MAG[i];
+    svg.appendChild(el("text",{x:cx,y:T+ph+33,class:"axl mono","text-anchor":"middle"},
+      (dm>0?"+":"")+dm));
+  }
+  svg.appendChild(el("line",{x1:L,x2:L+pw,y1:T+ph,y2:T+ph,class:"gl"}));
+  svg.appendChild(el("text",{x:L,y:14,class:"axl"},"Points"));
+  document.getElementById("q-wrap").appendChild(svg);
+})();
+
+/* ===================== SHOT PROFILE ===================== */
+(function(){
+  // merge dunks into the rim bucket; order by shot value
+  const BUCKETS = [
+    {key:"rim",   label:"Layup / dunk",  val:2, match:p=>p.val===2 && p.type!=="jump"},
+    {key:"mid",   label:"Jumper",        val:2, match:p=>p.val===2 && p.type==="jump"},
+    {key:"three", label:"Jumper",        val:3, match:p=>p.val===3},
+    {key:"four",  label:"Jumper",        val:4, match:p=>p.val===4}
+  ];
+  const rows = BUCKETS.map(b=>{
+    const r = {label:b.label, val:b.val};
+    ["MAG","TNT"].forEach(k=>{
+      const hits = D.shotprofile[k].filter(b.match);
+      const made = hits.reduce((s,h)=>s+h.made,0), att = hits.reduce((s,h)=>s+h.att,0);
+      r[k] = {made, att, pct: att ? made/att*100 : null};
+    });
+    return r;
+  });
+
+  const W=460, RH=52, T=24, B=30, L=108, R=52;
+  const H = T + rows.length*RH + B, pw = W-L-R;
+  const svg = el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
+    "aria-label":"Field goal percentage by shot type for both teams."});
+  const x = p => L + p/100*pw;
+  [0,25,50,75,100].forEach(v=>{
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T-6,y2:T+rows.length*RH-14,class:"gl"}));
+    svg.appendChild(el("text",{x:x(v),y:T+rows.length*RH+2,class:"axl mono","text-anchor":"middle"},
+      v+"%"));
+  });
+  svg.appendChild(el("text",{x:L,y:12,class:"axl"},"Field goal %"));
+
+  rows.forEach((r,i)=>{
+    const top = T + i*RH;
+    svg.appendChild(el("text",{x:L-12,y:top+13,class:"rowlab","text-anchor":"end"},
+      r.val+"pt"));
+    svg.appendChild(el("text",{x:L-12,y:top+27,class:"rowlab s","text-anchor":"end"},r.label));
+    ["MAG","TNT"].forEach((k,j)=>{
+      const o = r[k], by = top + j*13;
+      if(!o.att){
+        svg.appendChild(el("text",{x:L+4,y:by+9,class:"axl"},
+          TEAM[k].short+" did not attempt one"));
+        return;
+      }
+      if(o.made===0){
+        svg.appendChild(el("line",{x1:L,x2:L,y1:by,y2:by+11,
+          stroke:TEAM[k].v,"stroke-width":2.5}));
+        svg.appendChild(el("text",{x:L+7,y:by+9,class:"vcap"+(k==="MAG"?"":" mut")},
+          o.made+"-"+o.att+"  (0%)"));
+        return;
+      }
+      const w = Math.max(o.pct/100*pw, 0);
+      svg.appendChild(el("path",{
+        d: w>5 ? `M ${L} ${by} h ${w-4} q 4 0 4 4 v 3 q 0 4 -4 4 h ${-(w-4)} Z`
+               : `M ${L} ${by} h ${w} v 11 h ${-w} Z`,
+        fill:TEAM[k].v}));
+      svg.appendChild(el("text",{x:L+w+7,y:by+9,class:"vcap"+(k==="MAG"?"":" mut")},
+        o.made+"-"+o.att));
+    });
+  });
+  document.getElementById("sp-wrap").appendChild(svg);
+})();
+
+/* ===================== TEAM COMPARISON (butterfly) ===================== */
+(function(){
+  const PCT = /%/;
+  const rows = D.comparison;
+  const W=920, RH=25, T=26, B=10, CW=176, SIDE=(W-CW)/2-8;
+  const H = T + rows.length*RH + B;
+  const svg = el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
+    "aria-label":"Nineteen team metrics compared, Magnolia on the left and TNT on the right."});
+  const cx0 = SIDE, cx1 = SIDE + CW;
+
+  svg.appendChild(el("text",{x:cx0-10,y:14,class:"axl","text-anchor":"end"},"Magnolia"));
+  svg.appendChild(el("text",{x:cx1+10,y:14,class:"axl"},"TNT"));
+
+  rows.forEach((r,i)=>{
+    const top = T + i*RH, by = top + 7, BH = 11;
+    const mx = Math.max(r.mag, r.tnt, 0.0001);
+    const wm = r.mag/mx*SIDE*0.86, wt = r.tnt/mx*SIDE*0.86;
+    const fmt = v => PCT.test(r.label) ? v.toFixed(1)+"%" : String(v);
+    const winner = r.mag===r.tnt ? null : (r.mag>r.tnt ? "MAG" : "TNT");
+
+    if(i%2===0) svg.appendChild(el("rect",{x:0,y:top,width:W,height:RH,
+      fill:"var(--sunken)",opacity:.6}));
+    // label block in the centre
+    svg.appendChild(el("text",{x:W/2,y:by+9,class:"rowlab","text-anchor":"middle",
+      style:"font-size:11.5px;letter-spacing:.02em"},
+      r.label.replace("FIELD GOAL","FG").replace("4-PT FG %","4PT FG %")
+             .replace("OFFENSIVE REBOUNDS","OFF. REBOUNDS")
+             .replace("SECOND CHANCE POINTS","2ND CHANCE PTS")
+             .replace("POINTS OFF TURNOVERS","PTS OFF TURNOVERS")
+             .replace("POINTS IN THE PAINT","PTS IN THE PAINT")));
+    // left bar grows right-to-left from cx0
+    svg.appendChild(el("path",{
+      d: wm>5 ? `M ${cx0} ${by} h ${-(wm-4)} q -4 0 -4 4 v 3 q 0 4 4 4 h ${wm-4} Z`
+              : `M ${cx0} ${by} h ${-wm} v ${BH} h ${wm} Z`,
+      fill:"var(--mag)", opacity: winner==="TNT" ? .55 : 1}));
+    svg.appendChild(el("text",{x:cx0-wm-8,y:by+9,class:"vcap"+(winner==="MAG"?"":" mut"),
+      "text-anchor":"end"}, fmt(r.mag)));
+    // right bar
+    svg.appendChild(el("path",{
+      d: wt>5 ? `M ${cx1} ${by} h ${wt-4} q 4 0 4 4 v 3 q 0 4 -4 4 h ${-(wt-4)} Z`
+              : `M ${cx1} ${by} h ${wt} v ${BH} h ${-wt} Z`,
+      fill:"var(--tnt)", opacity: winner==="MAG" ? .55 : 1}));
+    svg.appendChild(el("text",{x:cx1+wt+8,y:by+9,class:"vcap"+(winner==="TNT"?"":" mut")},
+      fmt(r.tnt)));
+  });
+  document.getElementById("cm-wrap").appendChild(svg);
+
+  document.getElementById("cm-tbl").innerHTML =
+    `<table class="data"><thead><tr><th class="l">Metric</th><th>Magnolia</th><th>TNT</th>
+      <th>Edge</th></tr></thead><tbody>` +
+    rows.map(r=>{
+      const fmt = v => PCT.test(r.label) ? v.toFixed(1)+"%" : String(v);
+      const w = r.mag===r.tnt ? "—" : (r.mag>r.tnt ? "Magnolia" : "TNT");
+      return `<tr><td class="l nm">${esc(r.label)}</td><td>${fmt(r.mag)}</td>
+        <td>${fmt(r.tnt)}</td><td>${w}</td></tr>`;
+    }).join("") + `</tbody></table>`;
+
+  wireToggle("cm","cm-wrap","cm-tbl");
+})();
+
+/* ===================== TEAM RATINGS STRIP ===================== */
+(function(){
+  const A = D.advTeam;
+  const rows = [
+    {k:"ortg", lab:"Offensive rating", sub:"points scored per 100 possessions", hi:true},
+    {k:"drtg", lab:"Defensive rating", sub:"points allowed per 100 possessions", hi:false},
+    {k:"net",  lab:"Net rating",       sub:"the difference", hi:true, sign:true},
+    {k:"ts",   lab:"True shooting %",  sub:"scoring efficiency, counting free throws", hi:true},
+    {k:"efg",  lab:"Effective FG %",   sub:"field goals, weighted by what they are worth", hi:true}
+  ];
+  let h = `<div class="hrow l">Rate</div>
+           <div class="hrow" style="color:var(--mag)">MAG</div>
+           <div class="hrow" style="color:var(--tnt)">TNT</div>`;
+  rows.forEach(r=>{
+    const m = A.MAG[r.k], t = A.TNT[r.k];
+    const better = m===t ? null : ((m>t)===r.hi ? "MAG" : "TNT");
+    const f = v => (r.sign && v>0 ? "+" : "") + v.toFixed(1);
+    h += `<div class="lab"><b>${r.lab}</b><span>${r.sub}</span></div>
+      <div class="v ${better==="MAG"?"win":"dim"}">${f(m)}</div>
+      <div class="v ${better==="TNT"?"win":"dim"}">${f(t)}</div>`;
+  });
+  h += `<div class="shared">
+          <span>Possessions each (pace) <b>${A.MAG.poss.toFixed(1)}</b></span>
+          <span>Points per possession <b style="color:var(--mag)">${A.MAG.ppp.toFixed(2)}</b>
+            vs <b style="color:var(--tnt)">${A.TNT.ppp.toFixed(2)}</b></span>
+        </div>`;
+  document.getElementById("eff").innerHTML = h;
+})();
+
+/* ===================== FOUR FACTORS ===================== */
+(function(){
+  const A = D.advTeam;
+  const F = [
+    {k:"efg", lab:"Shooting",    sub:"eFG%",       w:"40%", lower:false},
+    {k:"tov", lab:"Turnovers",   sub:"TOV%",       w:"25%", lower:true},
+    {k:"orb", lab:"Off. boards", sub:"OREB%",      w:"20%", lower:false},
+    {k:"ftr", lab:"Free throws", sub:"FT per FGA", w:"15%", lower:false}
+  ];
+  const W=460, H=268, L=34, R=12, T=20, B=58, MAXY=50;
+  const pw=W-L-R, ph=H-T-B;
+  const y = v => T + (1 - v/MAXY)*ph;
+  const svg = el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
+    "aria-label":"The four factors as percentages. TNT won shooting and turnovers decisively."});
+  [0,10,20,30,40,50].forEach(v=>{
+    svg.appendChild(el("line",{x1:L,x2:L+pw,y1:y(v),y2:y(v),class:"gl"}));
+    svg.appendChild(el("text",{x:L-8,y:y(v)+4,class:"axl mono","text-anchor":"end"},String(v)));
+  });
+  svg.appendChild(el("text",{x:L-8,y:T-11,class:"axl","text-anchor":"end"},"%"));
+  const band = pw/F.length, BW=23, GAP=2;
+  F.forEach((f,i)=>{
+    const cx = L + band*i + band/2;
+    const m = A.MAG[f.k], t = A.TNT[f.k];
+    const winner = m===t ? null : ((m>t) !== f.lower ? "MAG" : "TNT");
+    [["MAG",m,-1],["TNT",t,1]].forEach(([k,v,sgn])=>{
+      const bx = cx + (sgn<0 ? -BW-GAP/2 : GAP/2);
+      const hh = ph - (y(v)-T);
+      svg.appendChild(el("path",{
+        d:`M ${bx} ${y(v)+4} q 0 -4 4 -4 h ${BW-8} q 4 0 4 4 v ${hh-4} h ${-BW} Z`,
+        fill:TEAM[k].v, opacity: winner && winner!==k ? .5 : 1}));
+      svg.appendChild(el("text",{x:bx+BW/2,y:y(v)-7,
+        class:"vcap"+(winner===k?"":" mut"),"text-anchor":"middle"}, v.toFixed(1)));
+    });
+    svg.appendChild(el("text",{x:cx,y:T+ph+17,class:"plab","text-anchor":"middle"},
+      f.lab.toUpperCase()));
+    svg.appendChild(el("text",{x:cx,y:T+ph+31,class:"axl","text-anchor":"middle"},
+      f.sub + (f.lower ? "  ↓" : "")));
+    svg.appendChild(el("text",{x:cx,y:T+ph+45,class:"axl","text-anchor":"middle",
+      style:"font-size:10.5px"}, "weight " + f.w));
+  });
+  svg.appendChild(el("line",{x1:L,x2:L+pw,y1:T+ph,y2:T+ph,class:"gl"}));
+  document.getElementById("ff-wrap").appendChild(svg);
+  const note = document.createElement("p");
+  note.className = "card-sub";
+  note.style.cssText = "margin:10px 0 0;font-size:12px;color:var(--ink-3)";
+  note.innerHTML = "↓ marks the one factor where lower is better. TNT won shooting and "
+    + "turnovers — the two heaviest — and that is the game.";
+  document.getElementById("ff-wrap").after(note);
+})();
+
+/* ===================== USAGE VS TRUE SHOOTING ===================== */
+(function(){
+  const MINMIN = 8;
+  const pts = [];
+  ["MAG","TNT"].forEach(t=>D.advPlayers[t].forEach(p=>{
+    if(p.min >= MINMIN && p.ts !== null && p.usg !== null) pts.push({...p, team:t});
+  }));
+  const W=920, H=400, L=52, R=26, T=24, B=48;
+  const pw=W-L-R, ph=H-T-B;
+  const X0=0, X1=45, Y0=10, Y1=105;
+  const x = v => L + (v-X0)/(X1-X0)*pw;
+  const y = v => T + (Y1-v)/(Y1-Y0)*ph;
+  const rad = m => 4 + Math.sqrt(m/42)*7;
+
+  const svg = el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
+    "aria-label":"Scatter of usage rate against true shooting percentage for every player over 8 minutes."});
+  [10,20,30,40,50,60,70,80,90,100].forEach(v=>{
+    svg.appendChild(el("line",{x1:L,x2:L+pw,y1:y(v),y2:y(v),class:"gl"}));
+    if(v%20===0 || v===100)
+      svg.appendChild(el("text",{x:L-9,y:y(v)+4,class:"axl mono","text-anchor":"end"},v+"%"));
+  });
+  [0,10,20,30,40].forEach(v=>{
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ph,class:"gl"}));
+    svg.appendChild(el("text",{x:x(v),y:T+ph+18,class:"axl mono","text-anchor":"middle"},v+"%"));
+  });
+  // game-average reference (NOT a league baseline)
+  const g = D.gameTS;
+  svg.appendChild(el("line",{x1:L,x2:L+pw,y1:y(g),y2:y(g),stroke:"var(--hair-2)",
+    "stroke-width":2}));
+  svg.appendChild(el("text",{x:L+6,y:y(g)-8,class:"axl"},
+    "game average TS "+g.toFixed(1)+"%"));
+  svg.appendChild(el("text",{x:L+pw/2,y:T+ph+38,class:"axl","text-anchor":"middle"},
+    "Usage rate — share of team possessions he finished"));
+  svg.appendChild(el("text",{x:L-9,y:T-9,class:"axl","text-anchor":"end"},"TS%"));
+
+  const LABEL = {"R. Hollis-Jefferson":[-12,-11],"R. Nambatac":[11,-11],
+                 "J. Lastimosa":[11,13],"K. Buffen":[12,-10],
+                 "A. Barroca":[11,-11],"Z. Lucero":[-12,-11]};
+  pts.forEach(p=>{
+    svg.appendChild(el("circle",{cx:x(p.usg),cy:y(p.ts),r:rad(p.min),
+      fill:TEAM[p.team].v,"fill-opacity":.82,stroke:"var(--surface)","stroke-width":2,
+      "data-n":p.name}));
+  });
+  pts.forEach(p=>{
+    const off = LABEL[p.name];
+    if(!off) return;
+    svg.appendChild(el("text",{x:x(p.usg)+off[0],y:y(p.ts)+off[1],class:"dotlab",
+      "text-anchor":off[0]<0?"end":"start"}, p.name));
+  });
+  // hover: nearest point, hit target comfortably bigger than the mark
+  const hot = el("rect",{x:L,y:T,width:pw,height:ph,fill:"transparent",
+    style:"cursor:crosshair"});
+  const ring = el("circle",{r:0,fill:"none",stroke:"var(--ink)","stroke-width":2,opacity:0});
+  svg.appendChild(ring); svg.appendChild(hot);
+  hot.addEventListener("mousemove",evt=>{
+    const r = svg.getBoundingClientRect();
+    const sx = (evt.clientX-r.left)/r.width*W, sy = (evt.clientY-r.top)/r.height*H;
+    let best=null, bd=1e9;
+    pts.forEach(p=>{
+      const d2 = (x(p.usg)-sx)**2 + (y(p.ts)-sy)**2;
+      if(d2<bd){ bd=d2; best=p; }
+    });
+    if(!best || Math.sqrt(bd) > 46){ ring.setAttribute("opacity",0); hideTip(); return; }
+    ring.setAttribute("cx",x(best.usg)); ring.setAttribute("cy",y(best.ts));
+    ring.setAttribute("r",rad(best.min)+4); ring.setAttribute("opacity",1);
+    showTip(
+      `<div class="tt">${esc(best.name)} &middot; ${TEAM[best.team].short} &middot; ${best.mins}</div>
+       <div class="tr"><span class="nm">Usage</span><b>${best.usg.toFixed(1)}%</b></div>
+       <div class="tr"><span class="nm">True shooting</span><b>${best.ts.toFixed(1)}%</b></div>
+       <div class="tr"><span class="nm">Points</span><b>${best.pts}</b></div>
+       <div class="tx">${best.tsa} true-shooting attempts &middot; Game Score ${best.gmsc}</div>`,
+      evt.clientX, evt.clientY);
+  });
+  hot.addEventListener("mouseleave",()=>{ ring.setAttribute("opacity",0); hideTip(); });
+  document.getElementById("sc-wrap").appendChild(svg);
+
+  document.getElementById("sc-tbl").innerHTML =
+    `<table class="data"><thead><tr><th class="l">Player</th><th class="l">Team</th><th>Min</th>
+      <th>Usage%</th><th>TS%</th><th>TS att.</th><th>Pts</th><th>Game Score</th></tr></thead><tbody>` +
+    pts.slice().sort((a,b)=>b.usg-a.usg).map(p=>
+      `<tr><td class="l nm">${esc(p.name)}</td><td class="l">${TEAM[p.team].short}</td>
+       <td>${p.mins}</td><td>${p.usg.toFixed(1)}</td><td>${p.ts.toFixed(1)}</td>
+       <td>${p.tsa}</td><td>${p.pts}</td><td>${p.gmsc}</td></tr>`).join("") +
+    `</tbody></table>`;
+  wireToggle("sc","sc-wrap","sc-tbl");
+})();
+
+/* ===================== ASSIST CREATION ===================== */
+(function(){
+  const box = document.getElementById("cre");
+  // scale bars to the biggest PASSER TOTAL, not the biggest single passer-to-scorer pair
+  const passerTotals = {};
+  D.assistPairs.forEach(p=>{ const k=p.team+"|"+p.from;
+    passerTotals[k] = (passerTotals[k]||0) + p.n; });
+  const maxN = Math.max(...Object.values(passerTotals), 1);
+  let h = "";
+  ["TNT","MAG"].forEach(t=>{
+    const rows = D.assistPairs.filter(p=>p.team===t);
+    const byPasser = {};
+    rows.forEach(r=>{ (byPasser[r.from] = byPasser[r.from] || []).push(r); });
+    const order = Object.keys(byPasser).sort((a,b)=>
+      byPasser[b].reduce((s,r)=>s+r.n,0) - byPasser[a].reduce((s,r)=>s+r.n,0));
+    const tot = rows.reduce((s,r)=>s+r.n,0);
+    h += `<div class="cre-team">
+      <div class="cre-head"><i class="swatch" style="background:${TEAM[t].v}"></i>
+        ${esc(TEAM[t].short)}<b>${tot} AST</b></div>`;
+    order.forEach(p=>{
+      const n = byPasser[p].reduce((s,r)=>s+r.n,0);
+      const targets = byPasser[p].slice().sort((a,b)=>b.n-a.n)
+        .map(r=> r.n>1 ? `${esc(r.to)} ×${r.n}` : esc(r.to)).join(", ");
+      h += `<div class="cre-row">
+          <span class="nm">${esc(p)}</span>
+          <span class="bar" style="background:${TEAM[t].v};width:${Math.round(n/maxN*100)}%"></span>
+          <span class="n">${n}</span>
+        </div>
+        <div class="cre-to">to ${targets}</div>`;
+    });
+    h += `</div>`;
+  });
+  box.innerHTML = h;
+})();
+
+/* ===================== CAVEATS ===================== */
+(function(){
+  const N = D.notes;
+  document.getElementById("caveat").innerHTML = `
+    <div class="item"><h4>Lineup on/off and five-man data</h4><p>${esc(N.noLineups)}</p></div>
+    <div class="item"><h4>PER, Win Shares, BPM, VORP</h4><p>${esc(N.noPER)}</p></div>`;
+})();
+
+/* ===================== BOX SCORE (basic + advanced) ===================== */
+(function(){
+  const BASIC = [
+    {k:"no",t:"#",cls:"no"}, {k:"player",t:"Player",cls:"l nm"}, {k:"mins",t:"Min"},
+    {k:"pts",t:"Pts"}, {k:"fg",t:"FG"}, {k:"fg_pct",t:"FG%"}, {k:"p3",t:"3P"},
+    {k:"p3_pct",t:"3P%"}, {k:"p4",t:"4P"}, {k:"ft",t:"FT"}, {k:"off",t:"Off"},
+    {k:"def",t:"Def"}, {k:"reb",t:"Reb"}, {k:"ast",t:"Ast"}, {k:"to",t:"TO"},
+    {k:"stl",t:"Stl"}, {k:"blk",t:"Blk"}, {k:"pf",t:"PF"}, {k:"fls_on",t:"Fls on"},
+    {k:"pm",t:"+/-"}
+  ];
+  const ADV = [
+    {k:"no",t:"#",cls:"no"}, {k:"name",t:"Player",cls:"l nm"}, {k:"mins",t:"Min"},
+    {k:"usg",t:"Usg%",d:1}, {k:"ts",t:"TS%",d:1}, {k:"efg",t:"eFG%",d:1},
+    {k:"astp",t:"Ast%",d:1}, {k:"orbp",t:"Oreb%",d:1}, {k:"drbp",t:"Dreb%",d:1},
+    {k:"trbp",t:"Reb%",d:1}, {k:"tovp",t:"TO%",d:1}, {k:"stlp",t:"Stl%",d:1},
+    {k:"blkp",t:"Blk%",d:1}, {k:"p36",t:"Pts/36",d:1}, {k:"r36",t:"Reb/36",d:1},
+    {k:"a36",t:"Ast/36",d:1}, {k:"gmsc",t:"GmSc",d:1}, {k:"pm",t:"+/-"},
+    {k:"onnet",t:"Net/100",d:1}
+  ];
+  const TIP = {
+    usg:"Share of his team's possessions this player finished while on the floor",
+    ts:"True shooting % — points per scoring attempt, counting free throws",
+    efg:"Effective FG% — field goals weighted by what they are worth",
+    astp:"Share of team-mates' field goals he assisted while on the floor",
+    tovp:"Turnovers per 100 of his own possessions used",
+    gmsc:"Game Score — Hollinger's single-number summary of a box score line",
+    onnet:"Official plus-minus, scaled to per-100 possessions",
+    pm:"Official plus-minus from the box score"
+  };
+  const LOWMIN = 8;
+  let team = "MAG", mode = "basic", sortK = null, sortDir = -1;
+  const cols = () => mode === "basic" ? BASIC : ADV;
+
+  const numish = v => {
+    if(v === null || v === undefined) return -Infinity;
+    if(typeof v === "number") return v;
+    const t = String(v);
+    if(/^\d+:\d+$/.test(t)){ const [a,b] = t.split(":").map(Number); return a*60+b; }
+    if(/^\d+-\d+$/.test(t)) return +t.split("-")[0];
+    const f = parseFloat(t);
+    return isNaN(f) ? t.toLowerCase() : f;
+  };
+  const rowsFor = () => mode === "basic"
+    ? D.teams[team].players.map(p => ({...p, name:p.player}))
+    : D.advPlayers[team].map(p => ({...p, no:p.no}));
+
+  function cell(r, c){
+    let v = r[c.k];
+    if(c.k === "player" || c.k === "name")
+      return esc(v) + (IMPORTS[r.player || r.name] ? '<span class="imp">IMP</span>' : "");
+    if(v === null || v === undefined || v === "") return "–";
+    if(c.k.endsWith("_pct")) return (+v).toFixed(1);
+    if(c.k === "pm") return (r.pm > 0 ? "+" : "") + r.pm;
+    if(c.k === "onnet") return (v > 0 ? "+" : "") + (+v).toFixed(1);
+    if(c.d !== undefined) return (+v).toFixed(c.d);
+    return esc(v);
+  }
+  function trow(r){
+    const low = mode === "adv" && (r.min !== undefined ? r.min : 99) < LOWMIN;
+    return `<tr class="${low ? "lowmin" : ""}"${low ? ' title="Under 8 minutes — rates rest on almost no sample"' : ""}>` +
+      cols().map(c=>{
+        const cls = [c.cls || "",
+          (c.k === "pm" || c.k === "onnet") ? (numish(r[c.k]) > 0 ? "pos" : numish(r[c.k]) < 0 ? "neg" : "") : ""
+        ].join(" ").trim();
+        return `<td class="${cls}">${cell(r, c)}</td>`;
+      }).join("") + `</tr>`;
+  }
+  function totalsRow(){
+    if(mode !== "basic") return "";
+    const T = D.teams[team].totals;
+    return `<tr class="tot">` + BASIC.map((c,i)=>{
+      if(i === 0) return "<td></td>";
+      if(c.k === "player") return '<td class="l">Team totals</td>';
+      const v = T[c.k];
+      if(v === undefined) return "<td></td>";
+      return `<td>${c.k.endsWith("_pct") ? (+v).toFixed(1) : esc(v)}</td>`;
+    }).join("") + `</tr>`;
+  }
+  function render(){
+    let rows = rowsFor(), body = "";
+    if(sortK){
+      rows.sort((a,b)=>{ const x = numish(a[sortK]), y = numish(b[sortK]);
+        return (x < y ? -1 : x > y ? 1 : 0) * sortDir; });
+      body = rows.map(trow).join("");
+    }else{
+      ["starters","bench"].forEach(g=>{
+        body += `<tr class="grp"><td colspan="${cols().length}">${g}</td></tr>`;
+        body += rows.filter(r=>r.group === g).map(trow).join("");
+      });
+    }
+    document.getElementById("bx-wrap").innerHTML =
+      `<table class="data"><thead><tr>` + cols().map(c=>
+        `<th class="${(c.cls||"").includes("l") ? "l" : ""}" data-k="${c.k}"
+          ${sortK === c.k ? `aria-sort="${sortDir === -1 ? "descending" : "ascending"}"` : ""}
+          title="${esc(TIP[c.k] || ("Sort by " + c.t))}">${esc(c.t)}${
+          sortK === c.k ? `<span class="ar"> ${sortDir === -1 ? "▼" : "▲"}</span>` : ""}</th>`
+      ).join("") + `</tr></thead><tbody>${body}${totalsRow()}</tbody></table>`;
+    document.querySelectorAll("#bx-wrap th").forEach(th=>{
+      th.addEventListener("click",()=>{
+        const k = th.dataset.k;
+        if(sortK === k) sortDir = -sortDir; else { sortK = k; sortDir = -1; }
+        render();
+      });
+    });
+  }
+  ["MAG","TNT"].forEach(k=>{
+    document.getElementById("bx-"+k).addEventListener("click",()=>{
+      team = k; sortK = null; sortDir = -1;
+      ["MAG","TNT"].forEach(j=>document.getElementById("bx-"+j)
+        .setAttribute("aria-pressed", String(j === k)));
+      render();
+    });
+  });
+  [["bx-basic","basic"],["bx-adv","adv"]].forEach(([id,m])=>{
+    document.getElementById(id).addEventListener("click",()=>{
+      mode = m; sortK = null; sortDir = -1;
+      document.getElementById("bx-basic").setAttribute("aria-pressed", String(m === "basic"));
+      document.getElementById("bx-adv").setAttribute("aria-pressed", String(m === "adv"));
+      render();
+    });
+  });
+  render();
+})();
+
+/* ===================== PLAY BY PLAY ===================== */
+(function(){
+  let per="all", tm="all", ty="all";
+  const box = document.getElementById("pbp");
+  const count = document.getElementById("pbp-count");
+  count.textContent = D.pbp.length;
+  function match(e){
+    if(per!=="all" && e.period!==+per) return false;
+    if(tm!=="all" && e.team!==tm) return false;
+    if(ty==="score") return e.made===true;
+    if(ty!=="all" && e.type!==ty) return false;
+    return true;
+  }
+  function render(){
+    const list = D.pbp.filter(match);
+    if(!list.length){
+      box.innerHTML = `<p class="pbp-empty">No events match these filters.</p>`;
+      return;
+    }
+    box.innerHTML = list.map(e=>{
+      const scored = e.made===true;
+      return `<div class="ev${scored?" score":""}">
+        <span class="clk">Q${e.period} ${e.clock}</span>
+        <span class="bar" style="background:${TEAM[e.team].v}"></span>
+        <span class="txt">${e.player?`<span class="who">${esc(e.player)}</span> `:""}<span class="act">${esc(e.act)}</span></span>
+        <span class="sc">${e.score_mag}–${e.score_tnt}</span>
+      </div>`;
+    }).join("");
+    box.scrollTop = 0;
+  }
+  function wire(sel, attr, setter){
+    document.querySelectorAll(sel).forEach(b=>{
+      b.addEventListener("click",()=>{
+        setter(b.dataset[attr]);
+        document.querySelectorAll(sel).forEach(o=>
+          o.setAttribute("aria-pressed", String(o===b)));
+        render();
+      });
+    });
+  }
+  wire("[data-per]","per",v=>per=v);
+  wire("[data-tm]","tm",v=>tm=v);
+  wire("[data-ty]","ty",v=>ty=v);
+  render();
+})();
+
+/* ===================== LEAGUE VIEW ===================== */
+const LGV = (function(){
+  let conf = 'gov';
+  let pview = 'pg', pteam = 'ALL', pname = '', ponlyQual = false;
+  let psort = 'ppg', pdir = -1;
+  const C = () => LG.conferences[conf];
+  const num = v => (v === null || v === undefined) ? -Infinity : v;
+  const f1 = v => v === null || v === undefined ? '–' : (+v).toFixed(1);
+  const f2 = v => v === null || v === undefined ? '–' : (+v).toFixed(2);
+  const sgn = v => v === null || v === undefined ? '–' : (v > 0 ? '+' : '') + (+v).toFixed(1);
+
+  /* ---------- top strip ---------- */
+  function strip(){
+    const c = C(), L = c.league;
+    const tg = c.teams.map(t=>t.g);
+    document.getElementById('lg-scope').textContent =
+      c.label + ' · ' + c.games.length + ' games';
+    const cells = [
+      ['Teams', c.teams.length, c.games.length + ' games played'],
+      ['Players', c.players.length, c.n_qual + ' meet the qualifier'],
+      ['Pace', L.pace.toFixed(1), 'possessions per 48 min'],
+      ['Points per possession', L.ppp.toFixed(3), (L.ppp*100).toFixed(1) + ' per 100'],
+      ['League average PER', '15.00', 'normalised by definition']
+    ];
+    document.getElementById('lg-strip').innerHTML = cells.map(([k,v,sub])=>
+      `<div class="c"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span>
+       <span class="s">${esc(sub)}</span></div>`).join('');
+    document.getElementById('lg-qual').textContent =
+      'Qualifier: ' + c.qual_rule + '. ' + c.n_qual + ' of ' + c.players.length +
+      ' players qualify.';
+  }
+
+  /* ---------- standings ---------- */
+  const SCOLS = [
+    {k:'name', t:'Team', cls:'l nm'}, {k:'w', t:'W'}, {k:'l', t:'L'},
+    {k:'pct', t:'Win%', d:3}, {k:'ppg', t:'PPG', d:1}, {k:'papg', t:'Opp PPG', d:1},
+    {k:'ortg', t:'ORtg', d:1}, {k:'drtg', t:'DRtg', d:1}, {k:'net', t:'Net', d:1, s:true},
+    {k:'pace', t:'Pace', d:1}, {k:'efg', t:'eFG%', d:1}, {k:'tov', t:'TOV%', d:1},
+    {k:'orb', t:'OREB%', d:1}, {k:'ftr', t:'FT/FGA', d:1}
+  ];
+  let ssort = 'w', sdir = -1;
+  function standings(){
+    const rows = C().teams.map(t=>({...t, pct: t.w/(t.w+t.l)}));
+    rows.sort((a,b)=>{ const x=num(a[ssort]), y=num(b[ssort]);
+      return (x<y?-1:x>y?1:0)*sdir || (b.w-a.w); });
+    document.getElementById('lg-standings').innerHTML =
+      `<table class="data"><thead><tr>` + SCOLS.map(c=>
+        `<th class="${(c.cls||'').includes('l')?'l':''}" data-k="${c.k}"
+         ${ssort===c.k?`aria-sort="${sdir===-1?'descending':'ascending'}"`:''}
+         title="Sort by ${esc(c.t)}">${esc(c.t)}${ssort===c.k?`<span class="ar"> ${sdir===-1?'▼':'▲'}</span>`:''}</th>`).join('')
+      + `</tr></thead><tbody>` + rows.map(r=>`<tr>` + SCOLS.map(c=>{
+          let v = r[c.k];
+          if(c.k==='name') return `<td class="l nm">${esc(v)} <span class="tm">${esc(r.code)}</span></td>`;
+          if(c.d!==undefined) v = v===null?'–':(c.s&&v>0?'+':'')+(+v).toFixed(c.d);
+          const cl = c.s ? (r[c.k]>0?'pos':r[c.k]<0?'neg':'') : '';
+          return `<td class="${cl}">${v}</td>`;
+        }).join('') + `</tr>`).join('') + `</tbody></table>`;
+    document.querySelectorAll('#lg-standings th').forEach(th=>th.addEventListener('click',()=>{
+      const k = th.dataset.k;
+      if(ssort===k) sdir=-sdir; else { ssort=k; sdir=-1; }
+      standings();
+    }));
+  }
+
+  /* ---------- offence vs defence scatter ---------- */
+  function odchart(){
+    const rows = C().teams;
+    const W=920, H=440, L=58, R=28, T=24, B=52;
+    const pw=W-L-R, ph=H-T-B;
+    const xs = rows.map(r=>r.ortg), ys = rows.map(r=>r.drtg);
+    const pad = 3;
+    const x0=Math.min(...xs)-pad, x1=Math.max(...xs)+pad;
+    const y0=Math.min(...ys)-pad, y1=Math.max(...ys)+pad;
+    const x = v => L + (v-x0)/(x1-x0)*pw;
+    const y = v => T + (v-y0)/(y1-y0)*ph;          // inverted: low DRtg (good) at top
+    const svg = el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img',
+      'aria-label':'Team offensive rating against defensive rating; best teams sit top right.'});
+    const tick = (a,b)=>{ const st=5, out=[];
+      for(let v=Math.ceil(a/st)*st; v<=b; v+=st) out.push(v); return out; };
+    tick(y0,y1).forEach(v=>{
+      svg.appendChild(el('line',{x1:L,x2:L+pw,y1:y(v),y2:y(v),class:'gl'}));
+      svg.appendChild(el('text',{x:L-9,y:y(v)+4,class:'axl mono','text-anchor':'end'},String(v)));
+    });
+    tick(x0,x1).forEach(v=>{
+      svg.appendChild(el('line',{x1:x(v),x2:x(v),y1:T,y2:T+ph,class:'gl'}));
+      svg.appendChild(el('text',{x:x(v),y:T+ph+18,class:'axl mono','text-anchor':'middle'},String(v)));
+    });
+    // break-even diagonal: ORtg == DRtg
+    const lo = Math.max(x0,y0), hi = Math.min(x1,y1);
+    svg.appendChild(el('line',{x1:x(lo),y1:y(lo),x2:x(hi),y2:y(hi),
+      stroke:'var(--hair-2)','stroke-width':2}));
+    svg.appendChild(el('text',{x:x(hi)-4,y:y(hi)-8,class:'axl','text-anchor':'end'},
+      'break-even'));
+    svg.appendChild(el('text',{x:L+pw/2,y:T+ph+40,class:'axl','text-anchor':'middle'},
+      'Offensive rating — points scored per 100 possessions'));
+    svg.appendChild(el('text',{x:L-9,y:T-9,class:'axl','text-anchor':'end'},'DRtg'));
+    svg.appendChild(el('text',{x:L+4,y:T+12,class:'axl'},'better defence ↑'));
+
+    rows.forEach(r=>{
+      const good = r.net > 0;
+      svg.appendChild(el('circle',{cx:x(r.ortg),cy:y(r.drtg),
+        r:5+Math.sqrt(Math.max(r.w,0))*1.5,
+        fill: good?'var(--tnt)':'var(--mag)','fill-opacity':.8,
+        stroke:'var(--surface)','stroke-width':2}));
+      svg.appendChild(el('text',{x:x(r.ortg),y:y(r.drtg)-12,class:'dotlab','text-anchor':'middle'},
+        r.code));
+    });
+    const hot = el('rect',{x:L,y:T,width:pw,height:ph,fill:'transparent',style:'cursor:crosshair'});
+    svg.appendChild(hot);
+    hot.addEventListener('mousemove',evt=>{
+      const b=svg.getBoundingClientRect();
+      const sx=(evt.clientX-b.left)/b.width*W, sy=(evt.clientY-b.top)/b.height*H;
+      let best=null,bd=1e9;
+      rows.forEach(r=>{ const d2=(x(r.ortg)-sx)**2+(y(r.drtg)-sy)**2; if(d2<bd){bd=d2;best=r;} });
+      if(!best||Math.sqrt(bd)>46){ hideTip(); return; }
+      showTip(`<div class="tt">${esc(best.name)} (${esc(best.code)})</div>
+        <div class="tr"><span class="nm">Record</span><b>${best.w}–${best.l}</b></div>
+        <div class="tr"><span class="nm">Offence</span><b>${best.ortg.toFixed(1)}</b></div>
+        <div class="tr"><span class="nm">Defence</span><b>${best.drtg.toFixed(1)}</b></div>
+        <div class="tr"><span class="nm">Net</span><b>${sgn(best.net)}</b></div>
+        <div class="tx">Pace ${best.pace.toFixed(1)} · eFG% ${best.efg.toFixed(1)} · TOV% ${best.tov.toFixed(1)}</div>`,
+        evt.clientX, evt.clientY);
+    });
+    hot.addEventListener('mouseleave',hideTip);
+    const w = document.getElementById('od-wrap'); w.innerHTML=''; w.appendChild(svg);
+
+    document.getElementById('od-tbl').innerHTML =
+      `<table class="data"><thead><tr><th class="l">Team</th><th>W</th><th>L</th>
+       <th>ORtg</th><th>DRtg</th><th>Net</th><th>Pace</th></tr></thead><tbody>` +
+      rows.slice().sort((a,b)=>b.net-a.net).map(r=>
+        `<tr><td class="l nm">${esc(r.name)}</td><td>${r.w}</td><td>${r.l}</td>
+         <td>${r.ortg.toFixed(1)}</td><td>${r.drtg.toFixed(1)}</td>
+         <td class="${r.net>0?'pos':'neg'}">${sgn(r.net)}</td>
+         <td>${r.pace.toFixed(1)}</td></tr>`).join('') + `</tbody></table>`;
+  }
+
+  /* ---------- leader cards ---------- */
+  const LEADERS = [
+    {k:'per',  t:'Player efficiency rating', s:'PER', d:1},
+    {k:'ws',   t:'Win shares',               s:'WS',  d:2},
+    {k:'ws48', t:'Win shares per 48',        s:'WS/48', d:3},
+    {k:'ppg',  t:'Points per game',          s:'PPG', d:1},
+    {k:'rpg',  t:'Rebounds per game',        s:'RPG', d:1},
+    {k:'apg',  t:'Assists per game',         s:'APG', d:1},
+    {k:'ts',   t:'True shooting',            s:'TS%', d:1},
+    {k:'usg',  t:'Usage rate',               s:'USG%', d:1}
+  ];
+  function leaders(){
+    const q = C().players.filter(p=>p.qual);
+    document.getElementById('lg-leaders').innerHTML = LEADERS.map(L=>{
+      const top = q.filter(p=>p[L.k]!==null && p[L.k]!==undefined)
+                   .sort((a,b)=>b[L.k]-a[L.k]).slice(0,5);
+      return `<div class="lead"><h4>${esc(L.t)}<span>${esc(L.s)}</span></h4>` +
+        top.map((p,i)=>`<div class="lrow${i===0?' top':''}">
+            <span class="r">${i+1}</span>
+            <span class="n"><b>${esc(p.name)}</b><i>${esc(p.team)}</i></span>
+            <span class="v">${(+p[L.k]).toFixed(L.d)}</span>
+          </div>`).join('') + `</div>`;
+    }).join('');
+  }
+
+  /* ---------- league usage vs TS scatter ---------- */
+  function lscatter(){
+    const pts = C().players.filter(p=>p.qual && p.ts!==null && p.usg!==null);
+    const W=920, H=440, L=56, R=26, T=24, B=52;
+    const pw=W-L-R, ph=H-T-B;
+    const X0=5, X1=Math.max(45, Math.ceil(Math.max(...pts.map(p=>p.usg))/5)*5);
+    const Y0=35, Y1=80;
+    const x = v => L + (v-X0)/(X1-X0)*pw;
+    const y = v => T + (Y1-v)/(Y1-Y0)*ph;
+    const rad = m => 3 + Math.sqrt(m/60);
+    const svg = el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img',
+      'aria-label':'Usage rate against true shooting percentage for every qualified player.'});
+    for(let v=40; v<=Y1; v+=5){
+      svg.appendChild(el('line',{x1:L,x2:L+pw,y1:y(v),y2:y(v),class:'gl'}));
+      svg.appendChild(el('text',{x:L-9,y:y(v)+4,class:'axl mono','text-anchor':'end'},v+'%'));
+    }
+    for(let v=10; v<=X1; v+=5){
+      svg.appendChild(el('line',{x1:x(v),x2:x(v),y1:T,y2:T+ph,class:'gl'}));
+      svg.appendChild(el('text',{x:x(v),y:T+ph+18,class:'axl mono','text-anchor':'middle'},v+'%'));
+    }
+    const lgTS = C().league.pts/(2*(C().league.fga + 0.44*C().league.fta))*100;
+    svg.appendChild(el('line',{x1:L,x2:L+pw,y1:y(lgTS),y2:y(lgTS),
+      stroke:'var(--hair-2)','stroke-width':2}));
+    svg.appendChild(el('text',{x:L+6,y:y(lgTS)-8,class:'axl'},
+      'conference average TS '+lgTS.toFixed(1)+'%'));
+    svg.appendChild(el('text',{x:L+pw/2,y:T+ph+40,class:'axl','text-anchor':'middle'},
+      'Usage rate — share of team possessions used'));
+    svg.appendChild(el('text',{x:L-9,y:T-9,class:'axl','text-anchor':'end'},'TS%'));
+
+    pts.forEach(p=>svg.appendChild(el('circle',{cx:x(p.usg),cy:y(Math.min(Math.max(p.ts,Y0),Y1)),
+      r:rad(p.min), fill:'var(--tnt)','fill-opacity':.55,
+      stroke:'var(--surface)','stroke-width':1.5})));
+    // label only the extremes: highest usage, best TS, and the best of both
+    const byU = pts.slice().sort((a,b)=>b.usg-a.usg).slice(0,3);
+    const byT = pts.slice().sort((a,b)=>b.ts-a.ts).slice(0,2);
+    const byP = pts.slice().sort((a,b)=>b.per-a.per).slice(0,2);
+    const shown = new Set();
+    [...byU,...byT,...byP].forEach(p=>{
+      const id = p.team+p.name;
+      if(shown.has(id)) return; shown.add(id);
+      const ty = Math.min(Math.max(p.ts,Y0),Y1);
+      const right = x(p.usg) < L+pw*0.7;
+      svg.appendChild(el('text',{x:x(p.usg)+(right?10:-10),y:y(ty)-9,class:'dotlab',
+        'text-anchor':right?'start':'end'}, p.name));
+    });
+    const hot = el('rect',{x:L,y:T,width:pw,height:ph,fill:'transparent',style:'cursor:crosshair'});
+    const ring = el('circle',{r:0,fill:'none',stroke:'var(--ink)','stroke-width':2,opacity:0});
+    svg.appendChild(ring); svg.appendChild(hot);
+    hot.addEventListener('mousemove',evt=>{
+      const b=svg.getBoundingClientRect();
+      const sx=(evt.clientX-b.left)/b.width*W, sy=(evt.clientY-b.top)/b.height*H;
+      let best=null,bd=1e9;
+      pts.forEach(p=>{ const ty=Math.min(Math.max(p.ts,Y0),Y1);
+        const d2=(x(p.usg)-sx)**2+(y(ty)-sy)**2; if(d2<bd){bd=d2;best=p;} });
+      if(!best||Math.sqrt(bd)>34){ ring.setAttribute('opacity',0); hideTip(); return; }
+      const ty=Math.min(Math.max(best.ts,Y0),Y1);
+      ring.setAttribute('cx',x(best.usg)); ring.setAttribute('cy',y(ty));
+      ring.setAttribute('r',rad(best.min)+4); ring.setAttribute('opacity',1);
+      showTip(`<div class="tt">${esc(best.name)} · ${esc(best.team)} · ${best.g} games</div>
+        <div class="tr"><span class="nm">Usage</span><b>${f1(best.usg)}%</b></div>
+        <div class="tr"><span class="nm">True shooting</span><b>${f1(best.ts)}%</b></div>
+        <div class="tr"><span class="nm">PER</span><b>${f1(best.per)}</b></div>
+        <div class="tx">${f1(best.ppg)} pts · ${f1(best.rpg)} reb · ${f1(best.apg)} ast per game</div>`,
+        evt.clientX, evt.clientY);
+    });
+    hot.addEventListener('mouseleave',()=>{ ring.setAttribute('opacity',0); hideTip(); });
+    const w = document.getElementById('lsc-wrap'); w.innerHTML=''; w.appendChild(svg);
+    document.getElementById('lsc-tbl').innerHTML =
+      `<table class="data"><thead><tr><th class="l">Player</th><th class="l">Team</th>
+       <th>G</th><th>MPG</th><th>Usg%</th><th>TS%</th><th>PER</th></tr></thead><tbody>` +
+      pts.slice().sort((a,b)=>b.usg-a.usg).map(p=>
+        `<tr><td class="l nm">${esc(p.name)}</td><td class="l tm">${esc(p.team)}</td>
+         <td>${p.g}</td><td>${f1(p.mpg)}</td><td>${f1(p.usg)}</td><td>${f1(p.ts)}</td>
+         <td>${f1(p.per)}</td></tr>`).join('') + `</tbody></table>`;
+  }
+
+  /* ---------- player explorer ---------- */
+  const PV = {
+    pg: [['name','Player','l nm'],['team','Tm','l tm'],['g','G'],['mpg','MPG',null,1],
+         ['ppg','PPG',null,1],['rpg','RPG',null,1],['apg','APG',null,1],['spg','SPG',null,1],
+         ['bpg','BPG',null,1],['topg','TOPG',null,1],['fgp','FG%',null,1],['p3p','3P%',null,1],
+         ['ftp','FT%',null,1],['per','PER',null,1],['ws','WS',null,2]],
+    tot:[['name','Player','l nm'],['team','Tm','l tm'],['g','G'],['gs','GS'],['min','MIN',null,0],
+         ['pts','PTS'],['reb','REB'],['ast','AST'],['stl','STL'],['blk','BLK'],['to','TO'],
+         ['pf','PF'],['fgm','FGM'],['fga','FGA'],['p3m','3PM'],['p3a','3PA'],['p4m','4PM'],
+         ['ftm','FTM'],['fta','FTA'],['pm','+/-',null,0,true]],
+    adv:[['name','Player','l nm'],['team','Tm','l tm'],['g','G'],['min','MIN',null,0],
+         ['per','PER',null,1],['ts','TS%',null,1],['efg','eFG%',null,1],['usg','Usg%',null,1],
+         ['astp','Ast%',null,1],['trbp','Reb%',null,1],['orbp','Oreb%',null,1],
+         ['drbp','Dreb%',null,1],['tovp','TO%',null,1],['stlp','Stl%',null,1],
+         ['blkp','Blk%',null,1],['ortg_i','ORtg',null,1],['drtg_i','DRtg',null,1],
+         ['ows','OWS',null,2],['dws','DWS',null,2],['ws','WS',null,2],['ws48','WS/48',null,3],
+         ['pm','+/-',null,0,true],['pm100','+/-100',null,1,true]]
+  };
+  const PTIP = {
+    per:'Player Efficiency Rating, pace-adjusted, league average 15.00',
+    ts:'True shooting % — points per scoring attempt including free throws',
+    usg:'Share of team possessions the player used while on the floor',
+    ws:'Win Shares — estimated wins contributed',
+    ws48:'Win Shares per 48 minutes',
+    ows:'Offensive Win Shares', dws:'Defensive Win Shares',
+    ortg_i:'Individual offensive rating — points produced per 100 possessions used',
+    drtg_i:'Individual defensive rating — points allowed per 100 possessions',
+    pm:'Official plus-minus from the box scores',
+    pm100:'Official plus-minus per 100 possessions on court'
+  };
+  function players(){
+    const c = C();
+    const cols = PV[pview];
+    let rows = c.players.filter(p=>
+      (pteam==='ALL' || p.team===pteam) &&
+      (!ponlyQual || p.qual) &&
+      (!pname || p.name.toLowerCase().includes(pname)));
+    rows.sort((a,b)=>{
+      const x=num(a[psort]), y=num(b[psort]);
+      if(typeof a[psort]==='string') return String(a[psort]).localeCompare(String(b[psort]))*pdir;
+      return (x<y?-1:x>y?1:0)*pdir;
+    });
+    document.getElementById('pf-count').textContent =
+      rows.length + ' of ' + c.players.length + ' players';
+    document.getElementById('lg-players').innerHTML =
+      `<table class="data"><thead><tr>` + cols.map(([k,t,cls])=>
+        `<th class="${(cls||'').includes('l')?'l':''}" data-k="${k}"
+         ${psort===k?`aria-sort="${pdir===-1?'descending':'ascending'}"`:''}
+         title="${esc(PTIP[k]||('Sort by '+t))}">${esc(t)}${psort===k?`<span class="ar"> ${pdir===-1?'▼':'▲'}</span>`:''}</th>`).join('')
+      + `</tr></thead><tbody>` + rows.map(p=>
+        `<tr class="${p.qual?'':'unqual'}"${p.qual?'':' title="Below the leaderboard qualifier"'}>`
+        + cols.map(([k,t,cls,d,sg])=>{
+            let v = p[k];
+            if(v===null||v===undefined) return `<td class="${cls||''}">–</td>`;
+            if(k==='name') return `<td class="l nm">${esc(v)}</td>`;
+            if(d!==undefined && d!==null) v = (sg&&v>0?'+':'')+(+v).toFixed(d);
+            const cl = [cls||'', sg?(p[k]>0?'pos':p[k]<0?'neg':''):''].join(' ').trim();
+            return `<td class="${cl}">${esc(v)}</td>`;
+          }).join('') + `</tr>`).join('') + `</tbody></table>`;
+    document.querySelectorAll('#lg-players th').forEach(th=>th.addEventListener('click',()=>{
+      const k=th.dataset.k;
+      if(psort===k) pdir=-pdir; else { psort=k; pdir = k==='name'||k==='team' ? 1 : -1; }
+      players();
+    }));
+  }
+
+  function teamOptions(){
+    const sel = document.getElementById('pf-team');
+    sel.innerHTML = `<option value="ALL">All teams</option>` +
+      C().teams.slice().sort((a,b)=>a.code.localeCompare(b.code))
+        .map(t=>`<option value="${esc(t.code)}">${esc(t.code)} — ${esc(t.name)}</option>`).join('');
+    sel.value = 'ALL'; pteam = 'ALL';
+  }
+
+  function notes(){
+    const M = LG.method, X = LG.limits;
+    document.getElementById('lg-method').innerHTML =
+      `<div class="item"><h4>PER</h4><p>${esc(M.per)}</p></div>
+       <div class="item"><h4>Win Shares</h4><p>${esc(M.ws)}</p></div>
+       <div class="item"><h4>Possessions and pace</h4><p>${esc(M.poss)}</p></div>`;
+    document.getElementById('lg-limits').innerHTML =
+      `<div class="item"><h4>No BPM, no VORP</h4><p>${esc(X.bpm)}</p></div>
+       <div class="item"><h4>No lineup on/off</h4><p>${esc(X.lineups)}</p></div>
+       <div class="item"><h4>Sample size</h4><p>${esc(X.sample)}</p></div>`;
+  }
+
+  function renderAll(){
+    strip(); standings(); odchart(); leaders(); lscatter(); teamOptions(); players();
+  }
+
+  function init(){
+    notes();
+    document.querySelectorAll('[data-conf]').forEach(b=>b.addEventListener('click',()=>{
+      conf = b.dataset.conf;
+      document.querySelectorAll('[data-conf]').forEach(o=>
+        o.setAttribute('aria-pressed', String(o===b)));
+      psort='ppg'; pdir=-1; ssort='w'; sdir=-1; pname='';
+      document.getElementById('pf-name').value='';
+      renderAll();
+    }));
+    document.querySelectorAll('[data-pv]').forEach(b=>b.addEventListener('click',()=>{
+      pview=b.dataset.pv;
+      document.querySelectorAll('[data-pv]').forEach(o=>
+        o.setAttribute('aria-pressed', String(o===b)));
+      const keys = PV[pview].map(c=>c[0]);
+      if(!keys.includes(psort)){ psort = pview==='tot' ? 'pts' : (pview==='adv'?'per':'ppg'); pdir=-1; }
+      players();
+    }));
+    document.getElementById('pf-team').addEventListener('change',e=>{ pteam=e.target.value; players(); });
+    document.getElementById('pf-name').addEventListener('input',e=>{
+      pname=e.target.value.trim().toLowerCase(); players(); });
+    const qb = document.getElementById('pf-qual');
+    qb.addEventListener('click',()=>{ ponlyQual=!ponlyQual;
+      qb.setAttribute('aria-pressed',String(ponlyQual)); players(); });
+    wireToggle('od','od-wrap','od-tbl');
+    wireToggle('lsc','lsc-wrap','lsc-tbl');
+    renderAll();
+  }
+  return {init, rerender:renderAll};
+})();
+
+/* ===================== VIEW TABS ===================== */
+(function(){
+  const tl = document.getElementById('tab-league'), tg = document.getElementById('tab-game');
+  const vl = document.getElementById('view-league'), vg = document.getElementById('view-game');
+  const cw = document.getElementById('confwrap');
+  function show(league){
+    tl.setAttribute('aria-selected', String(league));
+    tg.setAttribute('aria-selected', String(!league));
+    vl.classList.toggle('hidden', !league);
+    vg.classList.toggle('hidden', league);
+    cw.classList.toggle('hidden', !league);
+    hideTip();
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+  tl.addEventListener('click',()=>show(true));
+  tg.addEventListener('click',()=>show(false));
+  LGV.init();
+})();
+
+</script>
